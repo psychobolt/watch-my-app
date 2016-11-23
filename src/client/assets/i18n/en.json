@@ -2,10 +2,8 @@
   "HOME": "Home",
   "ABOUT": "About",
   "HELLO": "Hello",
-  "LOVE_TECH": "I love technology!",
-  "ABOUT_ADD": "You want more? Add them yourself!",
-  "ABOUT_REWARD": "For reward, here is a list of awesome computer scientists:",
-  "INPUT_HINT": "Enter a new computer scientist...",
+  "ABOUT_ADD": "Add a service endpoint with default settings:",
+  "INPUT_HINT": "[http://wwww]host/ip[.com][:port]",
   "ADD_BTN_TEXT": "Add",
-  "SUCCESS_MSG": "Your deployment of Angular Seed Advanced worked perfectly."
+  "SUCCESS_MSG": "Your deployment of Watch My App worked perfectly."
 }
