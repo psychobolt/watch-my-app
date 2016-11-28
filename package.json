@@ -141,6 +141,7 @@
     "karma-mocha-reporter": "^2.2.0",
     "karma-remap-istanbul": "^0.2.1",
     "merge-stream": "^1.0.0",
+    "minimatch": "^3.0.3",
     "ngrx-store-freeze": "^0.1.0",
     "open": "0.0.5",
     "protractor": "^4.0.9",
@@ -152,6 +153,7 @@
     "slash": "~1.0.0",
     "supports-color": "^3.1.2",
     "systemjs-builder": "0.15.33",
+    "systemjs-plugin-json": "^0.2.2",
     "tildify": "^1.2.0",
     "traceur": "^0.0.111",
     "ts-node": "^1.4.3",
@@ -159,8 +161,7 @@
     "typedoc": "^0.5.0",
     "typescript": "^2.0.3",
     "walk": "^2.3.9",
-    "yargs": "^6.0.0",
-    "minimatch": "^3.0.3"
+    "yargs": "^6.0.0"
   },
   "dependencies": {
     "@angular/common": "~2.2.0",
@@ -175,8 +176,10 @@
     "@ngrx/effects": "^2.0.0",
     "@ngrx/store": "^2.2.1",
     "angulartics2": "^1.4.3",
+    "bootstrap": "^4.0.0-alpha.5",
     "core-js": "^2.4.1",
     "es-module-loader": "^1.0.0",
+    "firebase": "^3.6.1",
     "intl": "^1.2.5",
     "lodash": "^4.16.4",
     "minimatch": "^3.0.3",

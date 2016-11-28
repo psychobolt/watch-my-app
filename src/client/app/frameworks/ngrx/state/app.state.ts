@@ -36,6 +36,7 @@ import { combineReducers } from '@ngrx/store';
  * notation packages up all of the exports into a single object.
  */
 import * as fromMultilingual from '../../i18n/index';
+import * as fromMonitor from '../../monitor/index';
 import * as fromSample from '../../sample/index';
 
 /**
@@ -44,6 +45,7 @@ import * as fromSample from '../../sample/index';
  */
 export interface IAppState {
   i18n: fromMultilingual.IMultilingualState;
+  monitor: fromMonitor.IMonitorState;
   sample: fromSample.ISampleState;
 };
 
@@ -56,6 +58,7 @@ export interface IAppState {
  */
 const reducers = {
   i18n: fromMultilingual.reducer,
+  monitor: fromMonitor.reducer,
   sample: fromSample.reducer
 };
 
@@ -73,9 +76,9 @@ export function AppReducer(state: any, action: any) {
 export function getMultilingualState(state$: Observable<IAppState>) {
   return state$.select(s => s.i18n);
 }
-export function getNameListState(state$: Observable<IAppState>) {
-  return state$.select(s => s.sample);
+export function getMonitorState(state$: Observable<IAppState>) {
+  return state$.select(s => s.monitor);
 }
 
 export const getLang = compose(fromMultilingual.getLang, getMultilingualState);
-export const getNames = compose(fromSample.getNames, getNameListState);
+export const getEndpoints = compose(fromMonitor.getEndpoints, getMonitorState);

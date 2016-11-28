@@ -23,6 +23,8 @@ import { AppReducer } from './app/frameworks/ngrx/index';
 import { AnalyticsModule } from './app/frameworks/analytics/analytics.module';
 import { MultilingualModule, translateFactory } from './app/frameworks/i18n/multilingual.module';
 import { MultilingualEffects } from './app/frameworks/i18n/index';
+import { MonitorModule } from './app/frameworks/monitor/monitor.module';
+import { EndpointListEffects, PingEffects } from './app/frameworks/monitor/index';
 import { SampleModule } from './app/frameworks/sample/sample.module';
 import { NameListEffects } from './app/frameworks/sample/index';
 
@@ -72,11 +74,14 @@ export function cons() {
       deps: [Http],
       useFactory: (translateFactory)
     }]),
+    MonitorModule,
     SampleModule,
     StoreModule.provideStore(AppReducer),
     StoreDevtoolsModule.instrumentOnlyWithExtension(),
     EffectsModule.run(MultilingualEffects),
-    EffectsModule.run(NameListEffects)
+    EffectsModule.run(NameListEffects),
+    EffectsModule.run(EndpointListEffects),
+    EffectsModule.run(PingEffects)
   ],
   declarations: [
     AppComponent,

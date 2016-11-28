@@ -5,5 +5,10 @@
   "ABOUT_ADD": "Add a service endpoint with default settings:",
   "INPUT_HINT": "[http://wwww]host/ip[.com][:port]",
   "ADD_BTN_TEXT": "Add",
-  "SUCCESS_MSG": "Your deployment of Watch My App worked perfectly."
+  "SUCCESS_MSG": "Your deployment of Watch My App worked perfectly.",
+  "PINGING": "Pinging...",
+  "OFFLINE": "Offline",
+  "ONLINE": "Online",
+  "STATUS": "Status",
+  "ENDPOINT": "Endpoint"
 }

@@ -40,6 +40,9 @@ ts-node
 *.iml
 .vscode/angulardoc.json
 
+#Firebase configuration
+firebase-config.json
+
 dist
 dev
 docs

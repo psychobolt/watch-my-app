@@ -1,11 +1,13 @@
 // libs
+import { Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 // app
 import { BaseComponent, RouterExtensions } from '../../frameworks/core/index';
-import { IAppState, getNames } from '../../frameworks/ngrx/index';
-import * as nameList from '../../frameworks/sample/index';
+import { IAppState, getEndpoints } from '../../frameworks/ngrx/index';
+import * as endpointList from '../../frameworks/monitor/index';
+
 
 @BaseComponent({
   moduleId: module.id,
@@ -14,31 +16,20 @@ import * as nameList from '../../frameworks/sample/index';
   styleUrls: ['home.component.css']
 })
 export class HomeComponent {
-  public names$: Observable<Array<string>>;
-  public newName: string = '';
+  public endpoints$: Observable<Array<endpointList.EndpointModel>>;
+  public newEndpoint: string = '';
 
   constructor(private store: Store<IAppState>, public routerext: RouterExtensions) {
-    this.names$ = store.let(getNames);
+    this.endpoints$ = store.let(getEndpoints);
   }
 
   /*
-   * @param newname  any text as input.
+   * @param newEndpoint  any text as input.
    * @returns return false to prevent default form submit behavior to refresh the page.
    */
-  addName(): boolean {
-    this.store.dispatch(new nameList.AddAction(this.newName));
-    this.newName = '';
+  addEndpoint(): boolean {
+    this.store.dispatch(new endpointList.AddAction(this.newEndpoint));
+    this.newEndpoint = '';
     return false;
-  }
-
-  readAbout() {
-    // Try this in the {N} app
-    // {N} can use these animation options
-    this.routerext.navigate(['/about'], {
-      transition: {
-        duration: 1000,
-        name: 'slideTop',
-      }
-    });
   }
 }
