@@ -41,13 +41,13 @@ export class EndpointListService extends Analytics {
   }
 
   getStoredEndpoint(endpointOrId: string): Observable<EndpointModel> {
-    return this.store.select(state => state.monitor.endpoints).map(endpoints => 
-      endpoints.find(entry => entry.id === endpointOrId || entry.value == endpointOrId))
+    return this.store.select(state => state.monitor.endpoints).
+      map(endpoints => endpoints.find(entry => entry.id === endpointOrId || entry.value == endpointOrId));
   }
 
   addEndpoint(endpoint: string): Observable<EndpointModel> {
     return this.database.addChild(`endpoints`, {value: endpoint})
-      .map(() => this.getStoredEndpoint(endpoint)).switchMap(entry => entry);
+      .flatMap(() => this.getStoredEndpoint(endpoint));
   }
 
   updateEndpoint(endpoint: EndpointModel): Observable<EndpointModel> {

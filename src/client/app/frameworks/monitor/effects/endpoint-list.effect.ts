@@ -25,13 +25,8 @@ export class EndpointListEffects {
 
   @Effect() init$ : Observable<Action> = this.actions$
     .ofType(EndpointListActionTypes.INIT)
-    .switchMap((action: InitEndpointsAction) => {
-      return this.endpointListService.getEndpoints();
-    })
-    .map(payload => {
-      let endpoints = payload;
-      return new EndpointsSyncedAction(endpoints);
-    })
+    .switchMap((action: InitEndpointsAction) => this.endpointListService.getEndpoints())
+    .map(payload => new EndpointsSyncedAction(payload))
     .catch(err => {
       console.log(err);
       return Observable.of(new InitEndpointsFailedAction());
@@ -40,22 +35,15 @@ export class EndpointListEffects {
   @Effect() add$: Observable<Action> = this.actions$
     .ofType(EndpointListActionTypes.ADD)
     .switchMap((action: AddAction) => this.endpointListService.addEndpoint(action.payload))
-    .map(payload => {
-      //let endpoint = payload.value;
-      // analytics
-      // this.endpointListService.track(EndpointListActionTypes.ENDPOINT_ADDED, { label: endpoint });
-      return new EndpointAddedAction(payload);
-    })
-    .map(action => {
-      return new PingEndpointAction(action.payload);
-    });
+    .concatMap(payload => Observable.from([
+      new EndpointAddedAction(payload), 
+      new PingEndpointAction(payload)]
+    ));
 
   @Effect() update$: Observable<Action> = this.actions$
     .ofType(EndpointListActionTypes.UPDATE)
     .switchMap((action: UpdateAction) => this.endpointListService.updateEndpoint(action.payload))
-    .map(payload => {
-      return new EndpointUpdatedAction(payload);
-    });
+    .map(payload => new EndpointUpdatedAction(payload));
 
   constructor(
     private actions$: Actions,

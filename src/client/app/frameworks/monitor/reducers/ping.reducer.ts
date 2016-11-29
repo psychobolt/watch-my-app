@@ -12,14 +12,14 @@ export function reducer(
       });
     case PingActionTypes.PING_SUCCESS:
       return (<any>Object).assign({}, state, {
-        // endpoints: state.endpoints.map((endpoint) => {
-        //   if (action.payload.value === endpoint.value) { 
-        //     return (<any>Object).assign({}, endpoint, {
-        //       status: 'ONLINE'
-        //     })
-        //   }
-        //   return endpoint;
-        // })
+        endpoints: state.endpoints.map((endpoint) => {
+          if (action.payload.value === endpoint.value) { 
+            return (<any>Object).assign({}, endpoint, {
+              status: 'ONLINE'
+            })
+          }
+          return endpoint;
+        })
       });
     // case PingActionTypes.PING_FAILED:
     //   return (<any>Object).assign({}, state, {

@@ -24,15 +24,15 @@ export class PingEffects {
 
   @Effect() ping$ : Observable<Action> = this.actions$
     .ofType(PingActionTypes.PING_ENDPOINT)
-    .switchMap((action: PingEndpointAction) => this.pingService.pingEndpoint(action.payload).map(ping => {
-      return {
-        endpoint: action.payload, 
-        ping
-      };
-    }))
-    .map(payload => { 
-      return payload.ping === -1 ? new PingFailedAction(payload.endpoint) : new PingSuccessAction(payload.endpoint)
-    });
+    .switchMap((action: PingEndpointAction) => Observable.of(action))
+    // this.pingService.pingEndpoint(action.payload).map(ping => {
+    //   return {
+    //     endpoint: action.payload, 
+    //     ping
+    //   };
+    // }))
+    // .map(payload => new PingSuccessAction(payload.endpoint))
+    .map(action => new PingSuccessAction(action.payload))
   
   @Effect() pingSuccess$ : Observable<Action> = this.actions$
     .ofType(PingActionTypes.PING_SUCCESS)
@@ -42,22 +42,10 @@ export class PingEffects {
   //   .ofType(PingActionTypes.PING_FAILED)
   //   .map((action: PingFailedAction) => new PingRetryAction(action.payload));
 
-  @Effect() pingRetry$ : Observable<Action> = this.actions$
-    .ofType(PingActionTypes.PING_RETRY)
-    .map((action: PingRetryAction) => new PingEndpointAction(action.payload))
-    .delay(5000);
-    // .map(action => { 
-    //   return Observable.create((observer: Observer<Action>) => setTimeout(() => {
-    //     this.endpointListService.getStoredEndpoint(action.payload.id).subscribe(endpoint => {
-    //       if (endpoint == null) {
-    //         observer.next(new PingCompletedAction(action.payload));
-    //       } else {
-    //         observer.next(new PingEndpointAction(endpoint));
-    //       }
-    //       observer.complete();
-    //     });
-    //   }, 5000)).map(action => action)
-    // });
+  // @Effect() pingRetry$ : Observable<Action> = this.actions$
+  //   .ofType(PingActionTypes.PING_RETRY)
+  //   .map((action: PingRetryAction) => new PingEndpointAction(action.payload))
+  //   .delay(5000);
 
   constructor(
     private actions$: Actions,
