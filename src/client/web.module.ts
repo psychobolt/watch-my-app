@@ -9,12 +9,10 @@ import { Http } from '@angular/http';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StoreLogMonitorModule, useLogMonitor } from '@ngrx/store-log-monitor';
 import { TranslateLoader } from 'ng2-translate';
 
-// app
-import { AppComponent } from './app/components/app.component';
-import { HomeComponent } from './app/components/home/home.component';
-import { AboutComponent } from './app/components/about/about.component';
+// app routes
 import { routes } from './app/components/app.routes';
 
 // feature modules
@@ -50,6 +48,22 @@ if (String('<%= TARGET_DESKTOP %>') === 'true') {
   routerModule = RouterModule.forRoot(routes, {useHash: true});
 }
 
+// store-dev tools
+let storeDevtoolsModules = [];
+if (String('<%= TARGET_DESKTOP %>') === 'true') {
+  storeDevtoolsModules = [
+    StoreDevtoolsModule.instrumentStore({
+      monitor: useLogMonitor({
+        visible: true,
+        position: 'right'
+      })
+    }),
+    StoreLogMonitorModule
+  ];
+} else {
+  storeDevtoolsModules = [StoreDevtoolsModule.instrumentOnlyWithExtension()]
+}
+
 declare var window, console;
 
 // For AoT compilation to work:
@@ -59,6 +73,11 @@ export function win() {
 export function cons() {
   return console;
 }
+
+// app components
+import { AppComponent } from './app/components/app.component';
+import { HomeComponent } from './app/components/home/home.component';
+import { AboutComponent } from './app/components/about/about.component';
 
 @NgModule({
   imports: [
@@ -77,7 +96,7 @@ export function cons() {
     MonitorModule,
     SampleModule,
     StoreModule.provideStore(AppReducer),
-    StoreDevtoolsModule.instrumentOnlyWithExtension(),
+    ...storeDevtoolsModules,
     EffectsModule.run(MultilingualEffects),
     EffectsModule.run(NameListEffects),
     EffectsModule.run(EndpointListEffects),

@@ -7,10 +7,10 @@
           [(ngModel)]="newEndpoint" #url="ngModel" name="newEndpoint" [placeholder]="'INPUT_HINT' | translate" required>
         <button type="submit" formnovalidate>{{'ADD_BTN_TEXT' | translate}}</button>
       </form>
-      <div class="row">
+      <!--<div class="row">
         <div [hidden]="url.valid || url.pristine" 
           class="alert alert-danger col-xs-8 col-sm-10 col-md-10 col-lg-10 col-xl-10">Value must not be empty</div>
-      </div>
+      </div>-->
     </div>
   </div>
   <div class="row">
@@ -23,12 +23,15 @@
           </thead>
           <tbody>
             <tr *ngFor="let endpoint of (endpoints$ | async)">
-                <td>{{(endpoint.status || 'PINGING') | translate}}</td>
+                <td [ngClass]="{'offline-status-label' : endpoint.status === 'OFFLINE'}">{{(endpoint.status || 'PINGING') | translate}}</td>
                 <td>{{endpoint.value}}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+  </div>
+  <div class="row">
+      <button  (click)="validate()">Validate Endpoints</button>
   </div>
 </div>

@@ -17,7 +17,10 @@ import {
   EndpointAddedAction,
   EndpointUpdatedAction,
   EndpointListActionTypes,
-  PingEndpointAction
+  PingEndpointAction,
+  PingCompletedAction,
+  EndpointValidatorService,
+  ValidateEndpointsAction
 } from '../index';
 
 @Injectable()
@@ -26,27 +29,41 @@ export class EndpointListEffects {
   @Effect() init$ : Observable<Action> = this.actions$
     .ofType(EndpointListActionTypes.INIT)
     .switchMap((action: InitEndpointsAction) => this.endpointListService.getEndpoints())
-    .map(payload => new EndpointsSyncedAction(payload))
+    .map(endpoints => new EndpointsSyncedAction(endpoints))
     .catch(err => {
       console.log(err);
       return Observable.of(new InitEndpointsFailedAction());
     });
 
+  @Effect() endpointsSynced : Observable<Action> = this.actions$
+    .ofType(EndpointListActionTypes.ENDPOINTS_SYNCED)
+    .switchMap((action: EndpointsSyncedAction) => this.endpointListService.getStoredEndpoints())
+    .mergeMap(endpoints =>  Observable.from(endpoints.map(endpoint => 
+      endpoint.status ? new PingCompletedAction(endpoint) : new PingEndpointAction(endpoint))));
+
   @Effect() add$: Observable<Action> = this.actions$
     .ofType(EndpointListActionTypes.ADD)
     .switchMap((action: AddAction) => this.endpointListService.addEndpoint(action.payload))
-    .concatMap(payload => Observable.from([
+    .mergeMap(payload => Observable.from([
       new EndpointAddedAction(payload), 
-      new PingEndpointAction(payload)]
-    ));
+      new PingEndpointAction(payload)
+    ]));
 
   @Effect() update$: Observable<Action> = this.actions$
     .ofType(EndpointListActionTypes.UPDATE)
     .switchMap((action: UpdateAction) => this.endpointListService.updateEndpoint(action.payload))
     .map(payload => new EndpointUpdatedAction(payload));
 
+  @Effect({dispatch: false}) validateEndpoints$: Observable<Action> = this.actions$
+    .ofType(EndpointListActionTypes.VALIDATE_ENDPOINTS)
+    .switchMap((action: ValidateEndpointsAction) => {
+      this.validator.validate();
+      return Observable.of(action);
+    });
+
   constructor(
     private actions$: Actions,
-    private endpointListService: EndpointListService
+    private endpointListService: EndpointListService,
+    public validator: EndpointValidatorService,
   ) { }
 }

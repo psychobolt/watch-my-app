@@ -1,12 +1,11 @@
 import { Injectable, Inject, NgZone } from '@angular/core';
-import { FIREBASE } from '../../../app/frameworks/monitor/index';
 
 @Injectable()
 export class NSDatabaseService {
   private database:any;
   private onSync:Function;
   private userID:string;
-  constructor(@Inject(FIREBASE) firebase:any, private ngZone: NgZone) {
+  constructor(private ngZone: NgZone) {
     console.log('Constructing NSDatabaseService');
     this.database = firebase;
     this.database.init({

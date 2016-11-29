@@ -43,7 +43,7 @@ export class PingEndpointAction implements Action {
 }
 
 export class PingCompletedAction implements Action { 
-  type = PingActionTypes.PING_COMPLETED
+  type = PingActionTypes.PING_COMPLETED;
   constructor(public payload: EndpointModel) { }
 }
 

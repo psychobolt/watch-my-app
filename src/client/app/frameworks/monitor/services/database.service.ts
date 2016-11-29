@@ -6,13 +6,12 @@ import * as Rx from 'rxjs/Rx';
 import * as firebase from 'firebase';
 
 // app
-let CONFIG = require('/assets/firebase-config.json!json');
+let CONFIG = require('../../../../assets/firebase-config.json!json');
 
 @Injectable()
 export class DatabaseService {
+
   private database: firebase.database.Database;
-  private onSync:Function;
-  private userID:string;
 
   constructor() {
 
@@ -40,15 +39,14 @@ export class DatabaseService {
 
   addChild(path: string, data:any): Rx.Observable<any> {
     return Rx.Observable.create((observer: Rx.Observer<any>) => {
-      let newMessageRef = this.database.ref(path).push(data, (err) => {
+      this.database.ref(path).push(data, (err) => {
         if (err) {
           observer.error(err);
         } else {
           observer.next(data);
         }
-        observer.complete();
       });
-   });
+    });
   }
 
   updateValue(path: string, data: any): Rx.Observable<any> {

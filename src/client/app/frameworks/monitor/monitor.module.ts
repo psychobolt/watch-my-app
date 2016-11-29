@@ -4,7 +4,13 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 // module
-import { DatabaseService, EndpointListService, PingService } from './index';
+import { 
+  DatabaseService, 
+  EndpointListService, 
+  PingService, 
+  EndpointValidatorService,
+  NotificationService
+} from './index';
 
 /**
  * Do not specify providers for modules that might be imported by a lazy loaded module.
@@ -18,7 +24,9 @@ import { DatabaseService, EndpointListService, PingService } from './index';
   providers: [
     DatabaseService,
     EndpointListService,
-    PingService
+    PingService,
+    NotificationService,
+    EndpointValidatorService
   ]
 })
 export class MonitorModule {

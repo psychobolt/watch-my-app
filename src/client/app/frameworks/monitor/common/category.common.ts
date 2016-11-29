@@ -1,1 +1,1 @@
-export const CATEGORY: string = "Monitor";
+export const CATEGORY: string = 'Monitor';

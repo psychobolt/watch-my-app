@@ -1,0 +1,15 @@
+{
+  "rules": [{
+    "property": "status",
+    "type": "ChangeRule",
+    "oldValue": "ONLINE",
+    "newValue": "OFFLINE",
+    "reportType": "Violation"
+  }, {
+    "property": "status",
+    "type": "ChangeRule",
+    "oldValue": "OFFLINE",
+    "newValue": "ONLINE",
+    "reportType": "Fixed"
+  }]
+}

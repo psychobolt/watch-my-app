@@ -16,22 +16,22 @@ export function reducer(
           if (action.payload.value === endpoint.value) { 
             return (<any>Object).assign({}, endpoint, {
               status: 'ONLINE'
-            })
+            });
           }
           return endpoint;
         })
       });
-    // case PingActionTypes.PING_FAILED:
-    //   return (<any>Object).assign({}, state, {
-    //     endpoints: state.endpoints.map((endpoint) => {
-    //       if (action.payload.value === endpoint.value) { 
-    //         return (<any>Object).assign({}, endpoint, {
-    //           status: 'OFFLINE'
-    //         })
-    //       }
-    //       return endpoint;
-    //     })
-    //   });
+    case PingActionTypes.PING_FAILED:
+      return (<any>Object).assign({}, state, {
+        endpoints: state.endpoints.map((endpoint) => {
+          if (action.payload.value === endpoint.value) { 
+            return (<any>Object).assign({}, endpoint, {
+              status: 'OFFLINE'
+            });
+          }
+          return endpoint;
+        })
+      });
     default:
       return state;
   }

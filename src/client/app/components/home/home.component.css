@@ -28,3 +28,7 @@ a.link {
 a.link:hover {
   color: #f00;
 }
+
+offline-status-label {
+  color: red;
+}

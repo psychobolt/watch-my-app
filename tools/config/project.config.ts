@@ -28,7 +28,7 @@ export class ProjectConfig extends SeedAdvancedConfig {
     this.addMapConfig({
       name: 'json',
       config: 'systemjs-plugin-json/json.js' 
-    })
+    });
 
     // Configure loader extensions
     this.addMetaConfig({
@@ -72,6 +72,11 @@ export class ProjectConfig extends SeedAdvancedConfig {
     additionalPackages.push({
       name: 'firebase',
       path: `${this.APP_BASE}node_modules/firebase/firebase.js`
+    });
+
+    additionalPackages.push({
+      name: '@ngrx/store-log-monitor',
+      path: `${this.APP_BASE}node_modules/@ngrx/store-log-monitor/bundles/store-log-monitor.umd.js`
     });
 
     this.addPackagesBundles(additionalPackages);

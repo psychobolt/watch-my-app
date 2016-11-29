@@ -29,7 +29,7 @@ export class PingService {
       ping = endTime - startTime;
       return Observable.of(ping);
     }).catch(err => {
-      return Observable.of(ping);
+      return Observable.of(-1);
     });
   }
 }

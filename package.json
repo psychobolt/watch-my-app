@@ -72,6 +72,7 @@
     "@angular/compiler-cli": "~2.2.0",
     "@angular/platform-server": "~2.2.0",
     "@ngrx/store-devtools": "^3.1.0",
+    "@ngrx/store-log-monitor": "^3.0.2",
     "@types/async": "^2.0.32",
     "@types/browser-sync": "^0.0.34",
     "@types/core-js": "^0.9.34",

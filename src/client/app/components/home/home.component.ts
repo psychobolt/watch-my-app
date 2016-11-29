@@ -1,5 +1,4 @@
 // libs
-import { Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
@@ -19,7 +18,10 @@ export class HomeComponent {
   public endpoints$: Observable<Array<endpointList.EndpointModel>>;
   public newEndpoint: string = '';
 
-  constructor(private store: Store<IAppState>, public routerext: RouterExtensions) {
+  constructor(
+    private store: Store<IAppState>, 
+    public routerext: RouterExtensions
+  ) {
     this.endpoints$ = store.let(getEndpoints);
   }
 
@@ -31,5 +33,9 @@ export class HomeComponent {
     this.store.dispatch(new endpointList.AddAction(this.newEndpoint));
     this.newEndpoint = '';
     return false;
+  }
+
+  validate() {
+    this.store.dispatch(new endpointList.ValidateEndpointsAction())
   }
 }

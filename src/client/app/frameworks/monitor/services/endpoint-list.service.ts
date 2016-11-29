@@ -4,15 +4,15 @@ import { Injectable } from '@angular/core';
 // libs
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
 
 // app
-import { Config } from '../../core/index';
 import { Analytics, AnalyticsService } from '../../analytics/index';
 import { IAppState } from '../../../frameworks/ngrx/state/app.state';
 
 // module
 import { CATEGORY } from '../common/category.common';
-import { DatabaseService, EndpointModel, InitEndpointsAction } from '../index';
+import { DatabaseService, EndpointModel, EndpointViewModel, InitEndpointsAction } from '../index';
 
 @Injectable()
 export class EndpointListService extends Analytics {
@@ -40,14 +40,26 @@ export class EndpointListService extends Analytics {
     });
   }
 
+  getStoredEndpoints(): Observable<Array<EndpointViewModel>> {
+    return Observable.create((observer: Observer<Array<EndpointViewModel>>) => {
+      this.store.select(state => state.monitor.endpoints).subscribe(endpoints => {
+        observer.next(endpoints);
+        observer.complete();
+      });
+    });
+  }
+
   getStoredEndpoint(endpointOrId: string): Observable<EndpointModel> {
-    return this.store.select(state => state.monitor.endpoints).
-      map(endpoints => endpoints.find(entry => entry.id === endpointOrId || entry.value == endpointOrId));
+    return Observable.create((observer: Observer<EndpointModel>) => {
+      this.store.select(state => state.monitor.endpoints).subscribe(endpoints => {
+        observer.next(endpoints.find(entry => entry.id === endpointOrId || entry.value === endpointOrId));
+        observer.complete();
+      });
+    });
   }
 
   addEndpoint(endpoint: string): Observable<EndpointModel> {
-    return this.database.addChild(`endpoints`, {value: endpoint})
-      .flatMap(() => this.getStoredEndpoint(endpoint));
+    return this.database.addChild(`endpoints`, {value: endpoint});
   }
 
   updateEndpoint(endpoint: EndpointModel): Observable<EndpointModel> {

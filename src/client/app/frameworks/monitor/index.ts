@@ -1,6 +1,4 @@
-import { OpaqueToken } from '@angular/core';
 import { IMonitorState } from './state/monitor.state';
-import * as _ from 'lodash';
 
 // components
 
@@ -8,6 +6,8 @@ import * as _ from 'lodash';
 export * from './services/database.service';
 export * from './services/endpoint-list.service';
 export * from './services/ping.service';
+export * from './services/notification.service';
+export * from './services/validator.service';
 
 // actions
 export * from './actions/endpoint-list.action';

@@ -7,14 +7,14 @@ export function reducer(
   switch (action.type) {
     case EndpointListActionTypes.ENDPOINTS_SYNCED:
       action = action as EndpointsSyncedAction;
-      if (state.endpoints == null) {
+      if (!state.endpoints) {
         return Object.assign({}, state, {
           endpoints: action.payload
         });
       } else {
         return Object.assign({}, state, {
           endpoints: action.payload.map(endpoint => {
-            let oldEndpoint = state.endpoints.find(old => old.id == endpoint.id)
+            let oldEndpoint = state.endpoints.find(old => old.id === endpoint.id);
             return oldEndpoint ? Object.assign({}, oldEndpoint, endpoint) : endpoint;
           })
         });
