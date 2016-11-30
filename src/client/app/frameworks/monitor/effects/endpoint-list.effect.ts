@@ -18,9 +18,7 @@ import {
   EndpointUpdatedAction,
   EndpointListActionTypes,
   PingEndpointAction,
-  PingCompletedAction,
-  EndpointValidatorService,
-  ValidateEndpointsAction
+  PingCompletedAction
 } from '../index';
 
 @Injectable()
@@ -54,16 +52,8 @@ export class EndpointListEffects {
     .switchMap((action: UpdateAction) => this.endpointListService.updateEndpoint(action.payload))
     .map(payload => new EndpointUpdatedAction(payload));
 
-  @Effect({dispatch: false}) validateEndpoints$: Observable<Action> = this.actions$
-    .ofType(EndpointListActionTypes.VALIDATE_ENDPOINTS)
-    .switchMap((action: ValidateEndpointsAction) => {
-      this.validator.validate();
-      return Observable.of(action);
-    });
-
   constructor(
     private actions$: Actions,
-    private endpointListService: EndpointListService,
-    public validator: EndpointValidatorService,
+    private endpointListService: EndpointListService
   ) { }
 }

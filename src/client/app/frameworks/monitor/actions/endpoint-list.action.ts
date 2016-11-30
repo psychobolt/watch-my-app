@@ -19,7 +19,6 @@ export interface IEndpointListActions {
   ENDPOINT_ADDED: string;
   ENDPOINT_UPDATED: string;
   ENDPOINTS_SYNCED: string;
-  VALIDATE_ENDPOINTS: string;
 }
 
 export const EndpointListActionTypes: IEndpointListActions = {
@@ -29,8 +28,7 @@ export const EndpointListActionTypes: IEndpointListActions = {
   UPDATE: type(`[${CATEGORY}] Update Endpoint`),
   ENDPOINT_ADDED: type(`[${CATEGORY}] Endpoint Added`),
   ENDPOINT_UPDATED: type(`[${CATEGORY}] Endpoint Updated`),
-  ENDPOINTS_SYNCED: type(`[${CATEGORY}] Endpoints Synced`),
-  VALIDATE_ENDPOINTS: type(`[${CATEGORY}] Validate Endpoints`)
+  ENDPOINTS_SYNCED: type(`[${CATEGORY}] Endpoints Synced`)
 };
 
 /**
@@ -80,11 +78,6 @@ export class EndpointUpdatedAction implements Action {
   constructor(public payload: EndpointModel) { }
 }
 
-export class ValidateEndpointsAction implements Action {
-  type = EndpointListActionTypes.VALIDATE_ENDPOINTS;
-  payload: string = null;
-}
-
 
 /**
  * Export a type alias of all actions in this action group
@@ -97,5 +90,4 @@ export type EndpointListActions
   | UpdateAction
   | EndpointAddedAction
   | EndpointUpdatedAction
-  | EndpointsSyncedAction
-  | ValidateEndpointsAction;
+  | EndpointsSyncedAction;

@@ -8,7 +8,6 @@ import {
   DatabaseService, 
   EndpointListService, 
   PingService, 
-  EndpointValidatorService,
   NotificationService
 } from './index';
 
@@ -25,8 +24,7 @@ import {
     DatabaseService,
     EndpointListService,
     PingService,
-    NotificationService,
-    EndpointValidatorService
+    NotificationService
   ]
 })
 export class MonitorModule {

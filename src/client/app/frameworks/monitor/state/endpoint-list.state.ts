@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { IMonitorState } from './monitor.state';
+import { ReportModel } from '../models/report';
 
 export interface EndpointModel {
   id: string;
@@ -8,6 +9,7 @@ export interface EndpointModel {
 
 export interface EndpointViewModel extends EndpointModel {
   status?: string;
+  report?: ReportModel
 }
 
 export function getEndpoints(state$: Observable<IMonitorState>) {

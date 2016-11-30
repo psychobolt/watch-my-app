@@ -34,8 +34,4 @@ export class HomeComponent {
     this.newEndpoint = '';
     return false;
   }
-
-  validate() {
-    this.store.dispatch(new endpointList.ValidateEndpointsAction())
-  }
 }

@@ -24,7 +24,7 @@ export class PingService {
   pingEndpoint(endpoint: EndpointModel): Observable<number> {
     let startTime = performance.now();
     let ping;
-    return this.http.get(endpoint.value).map(() => {
+    return this.http.get(endpoint.value + "?" + new Date().getTime()).map(() => {
       let endTime = performance.now(); 
       ping = endTime - startTime;
       return Observable.of(ping);
