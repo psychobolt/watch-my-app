@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
 import { type } from '../../core/utils/type';
 import { CATEGORY } from '../common/category.common';
-import { EndpointModel } from '../index';
+import { EndpointModel } from '../models/endpoint.model';
+import { PingResultModel } from '../models/ping.model'; 
 
 /**
  * For each action type in an action group, make a simple
@@ -11,20 +12,13 @@ import { EndpointModel } from '../index';
  * literal types and runs a simple check to guarantee all
  * action types in the application are unique. 
  */
-export interface IPingActions {
-  PING_ENDPOINT: string;
-  PING_COMPLETED: string;
-  PING_SUCCESS: string;
-  PING_FAILED: string;
-  PING_RETRY: string;
-  DISCONNECTED: string;
-}
 
-export const PingActionTypes: IPingActions =  {
+export const PingActionTypes =  {
   PING_ENDPOINT: type(`[${CATEGORY}] Ping Endpoint`),
   PING_COMPLETED: type(`[${CATEGORY}] Ping Completed`),
   PING_SUCCESS: type(`[${CATEGORY}] Ping Success`),
   PING_FAILED: type(`[${CATEGORY}] Ping Failed`),
+  PING_UNSUPPORTED: type(`[${CATEGORY}] Ping Unsupported`),
   PING_RETRY: type(`[${CATEGORY}] Ping Retry`),
   DISCONNECTED: type(`[${CATEGORY}] Disconnected`)
 };
@@ -49,12 +43,17 @@ export class PingCompletedAction implements Action {
 
 export class PingSuccessAction implements Action  {
   type = PingActionTypes.PING_SUCCESS;
-  constructor(public payload: EndpointModel) { }
+  constructor(public payload: PingResultModel) { }
 }
 
 export class PingFailedAction implements Action {
   type = PingActionTypes.PING_FAILED;
-  constructor(public payload: EndpointModel) { }
+  constructor(public payload: PingResultModel) { }
+}
+
+export class PingUnsupportedAction implements Action {
+  type = PingActionTypes.PING_UNSUPPORTED;
+  constructor(public payload: PingResultModel) { }
 }
 
 export class PingRetryAction implements Action {
@@ -64,7 +63,7 @@ export class PingRetryAction implements Action {
 
 export class Disconnected implements Action {
   type = PingActionTypes.DISCONNECTED;
-  constructor(public payload: EndpointModel) { }
+  constructor(public payload: PingResultModel) { }
 }
 
 /**
@@ -76,5 +75,6 @@ export type PingActions
   | PingEndpointAction
   | PingSuccessAction
   | PingFailedAction
+  | PingUnsupportedAction
   | PingRetryAction
   | Disconnected;

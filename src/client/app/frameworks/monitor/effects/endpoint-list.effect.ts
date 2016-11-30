@@ -8,18 +8,20 @@ import { Observable } from 'rxjs/Observable';
 
 // module
 import { 
-  EndpointListService,
   InitEndpointsAction,
   InitEndpointsFailedAction,
   EndpointsSyncedAction,
   AddAction,
+  RemoveAction,
   UpdateAction,
   EndpointAddedAction,
+  EndpointRemovedAction,
   EndpointUpdatedAction,
   EndpointListActionTypes,
   PingEndpointAction,
   PingCompletedAction
-} from '../index';
+} from '../actions/index';
+import { EndpointListService } from '../services/endpoint-list.service';
 
 @Injectable()
 export class EndpointListEffects {
@@ -33,10 +35,10 @@ export class EndpointListEffects {
       return Observable.of(new InitEndpointsFailedAction());
     });
 
-  @Effect() endpointsSynced : Observable<Action> = this.actions$
+  @Effect() endpointsSynced$ : Observable<Action> = this.actions$
     .ofType(EndpointListActionTypes.ENDPOINTS_SYNCED)
     .switchMap((action: EndpointsSyncedAction) => this.endpointListService.getStoredEndpoints())
-    .mergeMap(endpoints =>  Observable.from(endpoints.map(endpoint => 
+    .mergeMap(endpoints => Observable.from(endpoints.map(endpoint => 
       endpoint.status ? new PingCompletedAction(endpoint) : new PingEndpointAction(endpoint))));
 
   @Effect() add$: Observable<Action> = this.actions$
@@ -46,6 +48,11 @@ export class EndpointListEffects {
       new EndpointAddedAction(payload), 
       new PingEndpointAction(payload)
     ]));
+
+  @Effect() remove$: Observable<Action> = this.actions$
+    .ofType(EndpointListActionTypes.REMOVE)
+    .switchMap((action: RemoveAction) => this.endpointListService.removeEndpoint(action.payload))
+    .map(payload => new EndpointRemovedAction(payload));
 
   @Effect() update$: Observable<Action> = this.actions$
     .ofType(EndpointListActionTypes.UPDATE)

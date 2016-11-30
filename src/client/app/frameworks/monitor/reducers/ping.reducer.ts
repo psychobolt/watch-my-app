@@ -1,36 +1,32 @@
-import { initialState, IMonitorState, PingActions, PingActionTypes } from '../index';
+import { initialState, IMonitorState } from '../state/index';
+import { 
+  PingActions, 
+  PingSuccessAction, 
+  PingFailedAction, 
+  PingActionTypes,
+  PingUnsupportedAction
+} from '../actions/index';
+import { endpointReportReducer } from './report.reducer';
 
-//TODO seperate into ping endpoint and service reducers
 export function reducer(
   state: IMonitorState = initialState,
   action: PingActions
 ): IMonitorState {
   switch (action.type) {
     case PingActionTypes.DISCONNECTED:
-      return (<any>Object).assign({}, state, {
-        pingActionStatus: 'OFFLINE'
+      return Object.assign({}, state, {
+        pingActionStatus: 'DISCONNECTED'
       });
+    case PingActionTypes.PING_UNSUPPORTED:
     case PingActionTypes.PING_SUCCESS:
-      return (<any>Object).assign({}, state, {
-        endpoints: state.endpoints.map((endpoint) => {
-          if (action.payload.value === endpoint.value) { 
-            return (<any>Object).assign({}, endpoint, {
-              status: 'ONLINE'
-            });
-          }
-          return endpoint;
-        })
-      });
     case PingActionTypes.PING_FAILED:
-      return (<any>Object).assign({}, state, {
-        endpoints: state.endpoints.map((endpoint) => {
-          if (action.payload.value === endpoint.value) { 
-            return (<any>Object).assign({}, endpoint, {
-              status: 'OFFLINE'
-            });
-          }
-          return endpoint;
-        })
+      action = action as PingSuccessAction | PingFailedAction | PingUnsupportedAction;
+      let endpoint = action.payload.endpoint;
+      return Object.assign({}, state, {
+        pingActionStatus: 'ACTIVE',
+        endpoints: state.endpoints.map((storedEndpoint) => 
+          storedEndpoint.value === endpoint.value ?
+            endpointReportReducer(state, action, endpoint) : storedEndpoint)
       });
     default:
       return state;

@@ -40,7 +40,8 @@ app.on('ready', () => {
   mainWindow = new BrowserWindow({ width: 900, height: 620 });
 
   // Tell Electron where to load the entry point from
-  mainWindow.loadURL('file://' + __dirname + '/index.html');
+  mainWindow.loadURL('http://localhost:5555');
+  //mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // Clear out the main window when the app is closed
   mainWindow.on('closed', () => {

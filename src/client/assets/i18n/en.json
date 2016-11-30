@@ -3,12 +3,15 @@
   "ABOUT": "About",
   "HELLO": "Hello",
   "ABOUT_ADD": "Add a service endpoint with default settings:",
-  "INPUT_HINT": "[http://wwww]host/ip[.com][:port]",
+  "INPUT_HINT": "http[s]://[www][subdomain.]domain/ip[.extension][:port][/path]",
   "ADD_BTN_TEXT": "Add",
   "SUCCESS_MSG": "Your deployment of Watch My App worked perfectly.",
   "PINGING": "Pinging...",
   "OFFLINE": "Offline",
   "ONLINE": "Online",
+  "HIGH_LATENCY": "High Latency",
   "STATUS": "Status",
-  "ENDPOINT": "Endpoint"
+  "ENDPOINT": "Endpoint",
+  "REQUEST_TYPE": "Request Type",
+  "INVALID_URL": "Please enter a valid url: "
 }

@@ -21,7 +21,8 @@ export class ProjectConfig extends SeedAdvancedConfig {
     this.NPM_DEPENDENCIES = [
       ...this.NPM_DEPENDENCIES,
       // {src: 'jquery/dist/jquery.min.js', inject: 'libs'}
-      {src: 'bootstrap/dist/css/bootstrap.min.css', inject: true}
+      {src: 'bootstrap/dist/css/bootstrap.min.css', inject: true},
+      {src: 'font-awesome/css/font-awesome.css', inject: true}
     ];
 
     // Configure global loader plugins
@@ -77,6 +78,13 @@ export class ProjectConfig extends SeedAdvancedConfig {
     additionalPackages.push({
       name: '@ngrx/store-log-monitor',
       path: `${this.APP_BASE}node_modules/@ngrx/store-log-monitor/bundles/store-log-monitor.umd.js`
+    });
+
+    additionalPackages.push({
+      name: 'moment',
+      packageMeta: {
+        main: 'moment.js'
+      }
     });
 
     this.addPackagesBundles(additionalPackages);

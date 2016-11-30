@@ -2,7 +2,8 @@
 import { Injectable } from '@angular/core';
 
 // libs
-import * as Rx from 'rxjs/Rx';
+import { Observer } from 'rxjs/Observer';
+import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase';
 
 // app
@@ -21,24 +22,24 @@ export class DatabaseService {
     this.database = app.database();
   }
 
-  sync(path: string): Rx.Observable<any> {
-    return Rx.Observable.create((observer: Rx.Observer<any>) => {
+  sync(path: string): Observable<any> {
+    return Observable.create((observer: Observer<any>) => {
       this.database.ref(path).on('value', (snapshot) => {
         observer.next(snapshot.val());
       });
     });
   }
 
-  onChildRemove(path): Rx.Observable<any> {
-    return Rx.Observable.create((observer: Rx.Observer<any>) => {
+  onChildRemove(path): Observable<any> {
+    return Observable.create((observer: Observer<any>) => {
       this.database.ref(path).on('value', (snapshot) => {
         observer.next(snapshot.val());
       });
     });
   }
 
-  addChild(path: string, data:any): Rx.Observable<any> {
-    return Rx.Observable.create((observer: Rx.Observer<any>) => {
+  addChild(path: string, data:any): Observable<any> {
+    return Observable.create((observer: Observer<any>) => {
       this.database.ref(path).push(data, (err) => {
         if (err) {
           observer.error(err);
@@ -49,8 +50,19 @@ export class DatabaseService {
     });
   }
 
-  updateValue(path: string, data: any): Rx.Observable<any> {
-    return Rx.Observable.create((observer: Rx.Observer<any>) => {
+  removeChild(path: string): Observable<any> {
+    return Observable.create((observer: Observer<any>) => {
+      this.database.ref(path).remove((err) => {
+        if (err) {
+          observer.error(err);
+        }
+        observer.complete();
+      });
+    });
+  }
+
+  updateValue(path: string, data: any): Observable<any> {
+    return Observable.create((observer: Observer<any>) => {
       this.database.ref(path).set(data, (err) => {
         if (err) {
           observer.error(err);

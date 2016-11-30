@@ -11,12 +11,17 @@ import {
   PingActionTypes,
   PingCompletedAction,
   PingSuccessAction,
+  PingUnsupportedAction,
   PingFailedAction,
   PingRetryAction,
   PingEndpointAction,
+  Disconnected
+} from '../actions/index';
+import { 
   EndpointListService, 
   PingService
-} from '../index';
+} from '../services/index';
+import { PingStatus } from '../models/ping.model';
 
 @Injectable()
 export class PingEffects {
@@ -29,25 +34,29 @@ export class PingEffects {
         ping
       };
     }))
-    .map(payload => payload.ping === -1 ? new PingFailedAction(payload.endpoint) : new PingSuccessAction(payload.endpoint));
+    .map(payload => {
+      switch (payload.ping) {
+        case PingStatus.FAILED:
+          return new PingFailedAction(payload);
+        case PingStatus.UNSUPPORTED:
+          return new PingUnsupportedAction(payload);
+        case PingStatus.DISCONNECTED:
+          return new Disconnected(payload);
+        default:
+          return new PingSuccessAction(payload)
+      }
+    });
   
-  @Effect() pingSuccess$ : Observable<Action> = this.actions$
-    .ofType(PingActionTypes.PING_SUCCESS)
-    .map((action: PingSuccessAction) => new PingRetryAction(action.payload));
-
-  @Effect() pingFailed$ : Observable<Action> = this.actions$
-    .ofType(PingActionTypes.PING_FAILED)
-    .map((action: PingFailedAction) => new PingRetryAction(action.payload));
+  @Effect() pingSuccessOrFailure$ : Observable<Action> = this.actions$
+    .ofType(PingActionTypes.PING_SUCCESS, PingActionTypes.PING_FAILED)
+    .map((action: PingSuccessAction) => new PingRetryAction(action.payload.endpoint));
 
   @Effect() pingRetry$ : Observable<Action> = this.actions$
     .ofType(PingActionTypes.PING_RETRY)
     .switchMap((action: PingRetryAction) => Observable.of(action))
     .delay(5000)
     .flatMap((action: PingRetryAction) => this.endpointListService.getStoredEndpoint(action.payload.id || action.payload.value))
-    //.map(payload => payload === null ? new PingCompletedAction(null) : new PingEndpointAction(payload));
-    .map(payload => { 
-      return payload === null ? new PingCompletedAction(null) : new PingEndpointAction(payload)
-    });
+    .map(payload => payload === null ? new PingCompletedAction(null) : new PingEndpointAction(payload));
 
   constructor(
     private actions$: Actions,

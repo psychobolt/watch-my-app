@@ -70,7 +70,7 @@ export function serveProd() {
 
   server.use(fallback('index.html', { root }));
 
-  server.listen(Config.PORT, () =>
-    openResource('http://localhost:' + Config.PORT + Config.APP_BASE)
-  );
+  // server.listen(Config.PORT, () =>
+  //   openResource('http://localhost:' + Config.PORT + Config.APP_BASE)
+  // );
 };

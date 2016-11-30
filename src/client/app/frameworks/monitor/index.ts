@@ -1,33 +1,23 @@
-import { IMonitorState } from './state/monitor.state';
+// actions
+export * from './actions/index';
 
 // components
 
-// services
-export * from './services/database.service';
-export * from './services/endpoint-list.service';
-export * from './services/ping.service';
-export * from './services/notification.service';
-
-// actions
-export * from './actions/endpoint-list.action';
-export * from './actions/ping.action';
 
 // effects
-export * from './effects/endpoint-list.effect';
-export * from './effects/ping.effect';
+export * from './effects/index';
+
+// services
+export * from './services/index';
 
 // reducers
-import * as fromEndpoints from './reducers/endpoint-list.reducer';
-import * as fromPing from './reducers/ping.reducer';
-export * from './reducers/validator.reducer';
-export function reducer (state: IMonitorState, action: any) {
-  return fromPing.reducer(fromEndpoints.reducer(state, action), action);
-}
+export * from './reducers/monitor.reducer';
 
 // state
-export * from './state/monitor.state';
-export * from './state/endpoint-list.state';
+export * from './state/index';
 
 // models
-export * from './models/report';
-export * from './models/rule';
+export * from './models/index';
+
+// module
+export * from './monitor.module';

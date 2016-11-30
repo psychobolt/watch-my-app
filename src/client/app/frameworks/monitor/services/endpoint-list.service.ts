@@ -12,7 +12,9 @@ import { IAppState } from '../../../frameworks/ngrx/state/app.state';
 
 // module
 import { CATEGORY } from '../common/category.common';
-import { DatabaseService, EndpointModel, EndpointViewModel, InitEndpointsAction } from '../index';
+import { EndpointModel, EndpointType } from '../models/endpoint.model';
+import { InitEndpointsAction } from '../actions/endpoint-list.action';
+import { DatabaseService } from '../services/database.service';
 
 @Injectable()
 export class EndpointListService extends Analytics {
@@ -24,8 +26,6 @@ export class EndpointListService extends Analytics {
   ) {
     super(analytics);
     this.category = CATEGORY;
-
-    this.store.dispatch(new InitEndpointsAction());
   }
 
   getEndpoints(): Observable<Array<EndpointModel>> {
@@ -40,8 +40,8 @@ export class EndpointListService extends Analytics {
     });
   }
 
-  getStoredEndpoints(): Observable<Array<EndpointViewModel>> {
-    return Observable.create((observer: Observer<Array<EndpointViewModel>>) => {
+  getStoredEndpoints(): Observable<Array<EndpointModel>> {
+    return Observable.create((observer: Observer<Array<EndpointModel>>) => {
       this.store.select(state => state.monitor.endpoints).subscribe(endpoints => {
         observer.next(endpoints);
         observer.complete();
@@ -59,7 +59,14 @@ export class EndpointListService extends Analytics {
   }
 
   addEndpoint(endpoint: string): Observable<EndpointModel> {
-    return this.database.addChild(`endpoints`, {value: endpoint});
+    return this.database.addChild(`endpoints`, {
+      value: endpoint,
+      type: EndpointType.HEAD
+    });
+  }
+
+  removeEndpoint(endpoint: EndpointModel) : Observable<any> {
+    return this.database.removeChild(`endpoints/${endpoint.id}`);
   }
 
   updateEndpoint(endpoint: EndpointModel): Observable<EndpointModel> {

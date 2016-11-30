@@ -1,4 +1,13 @@
-import { IMonitorState, EndpointListActions, EndpointsSyncedAction, EndpointListActionTypes, initialState } from '../index';
+import {
+  EndpointListActions,
+  EndpointsSyncedAction,
+  EndpointListActionTypes, 
+} from '../actions/index';
+import { 
+  IMonitorState, 
+  initialState 
+} from '../state/index';
+import { EndpointModel } from '../models/endpoint.model';
 
 export function reducer(
   state: IMonitorState = initialState,
@@ -6,14 +15,14 @@ export function reducer(
 ): IMonitorState {
   switch (action.type) {
     case EndpointListActionTypes.ENDPOINTS_SYNCED:
-      action = action as EndpointsSyncedAction;
+      let syncedAction = action as EndpointsSyncedAction;
       if (!state.endpoints) {
-        return Object.assign({}, state, {
-          endpoints: action.payload
+        return (<any>Object).assign({}, state, {
+          endpoints: syncedAction.payload
         });
       } else {
         return Object.assign({}, state, {
-          endpoints: action.payload.map(endpoint => {
+          endpoints: syncedAction.payload.map(endpoint => {
             let oldEndpoint = state.endpoints.find(old => old.id === endpoint.id);
             return oldEndpoint ? Object.assign({}, oldEndpoint, endpoint) : endpoint;
           })

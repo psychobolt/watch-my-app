@@ -29,6 +29,18 @@ a.link:hover {
   color: #f00;
 }
 
-offline-status-label {
+.offline-status-label {
   color: red;
+}
+
+.online-status-label {
+  color: green;
+}
+
+.high-latency-status-label {
+  color: yellow;
+}
+
+.pinging-status-label {
+  color: blue;
 }

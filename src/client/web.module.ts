@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { Http } from '@angular/http';
 
 // libs
+import 'rxjs/Rx';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -22,10 +23,8 @@ import { AnalyticsModule } from './app/frameworks/analytics/analytics.module';
 import { MultilingualModule, translateFactory } from './app/frameworks/i18n/multilingual.module';
 import { MultilingualEffects } from './app/frameworks/i18n/index';
 import { MonitorModule } from './app/frameworks/monitor/monitor.module';
-import { EndpointListEffects, PingEffects } from './app/frameworks/monitor/index';
+import { EndpointListEffects, PingEffects, NotificationEffects } from './app/frameworks/monitor/index';
 import { SampleModule } from './app/frameworks/sample/sample.module';
-import { NameListEffects } from './app/frameworks/sample/index';
-
 // config
 import { Config, WindowService, ConsoleService } from './app/frameworks/core/index';
 Config.PLATFORM_TARGET = Config.PLATFORMS.WEB;
@@ -98,9 +97,9 @@ import { AboutComponent } from './app/components/about/about.component';
     StoreModule.provideStore(AppReducer),
     ...storeDevtoolsModules,
     EffectsModule.run(MultilingualEffects),
-    EffectsModule.run(NameListEffects),
     EffectsModule.run(EndpointListEffects),
-    EffectsModule.run(PingEffects)
+    EffectsModule.run(PingEffects),
+    EffectsModule.run(NotificationEffects)
   ],
   declarations: [
     AppComponent,

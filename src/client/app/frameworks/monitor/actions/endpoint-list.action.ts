@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { type } from '../../core/utils/type';
 import { CATEGORY } from '../common/category.common';
-import { EndpointModel } from '../state/endpoint-list.state';
+import { EndpointModel } from '../models/endpoint.model';
 
 /**
  * For each action type in an action group, make a simple
@@ -11,22 +11,15 @@ import { EndpointModel } from '../state/endpoint-list.state';
  * literal types and runs a simple check to guarantee all
  * action types in the application are unique. 
  */
-export interface IEndpointListActions {
-  INIT: string;
-  INIT_FAILED: string;
-  ADD: string;
-  UPDATE: string;
-  ENDPOINT_ADDED: string;
-  ENDPOINT_UPDATED: string;
-  ENDPOINTS_SYNCED: string;
-}
 
-export const EndpointListActionTypes: IEndpointListActions = {
+export const EndpointListActionTypes = {
   INIT: type(`[${CATEGORY}] Endpoint List Init`),
   INIT_FAILED: type(`[${CATEGORY}] Endpoint List Init Failed`),
   ADD: type(`[${CATEGORY}] Add Endpoint`),
+  REMOVE: type(`[${CATEGORY}] Remove Endpoint`),
   UPDATE: type(`[${CATEGORY}] Update Endpoint`),
   ENDPOINT_ADDED: type(`[${CATEGORY}] Endpoint Added`),
+  ENDPOINT_REMOVED: type(`[${CATEGORY}] Endpoint Removed`),
   ENDPOINT_UPDATED: type(`[${CATEGORY}] Endpoint Updated`),
   ENDPOINTS_SYNCED: type(`[${CATEGORY}] Endpoints Synced`)
 };
@@ -60,6 +53,12 @@ export class AddAction implements Action {
   constructor(public payload: string) { }
 }
 
+export class RemoveAction implements Action {
+  type = EndpointListActionTypes.REMOVE;
+  
+  constructor(public payload: EndpointModel) { }
+}
+
 export class UpdateAction implements Action {
   type = EndpointListActionTypes.UPDATE;
 
@@ -68,6 +67,12 @@ export class UpdateAction implements Action {
 
 export class EndpointAddedAction implements Action {
   type = EndpointListActionTypes.ENDPOINT_ADDED;
+
+  constructor(public payload: EndpointModel) { }
+}
+
+export class EndpointRemovedAction implements Action {
+  type = EndpointListActionTypes.ENDPOINT_REMOVED;
 
   constructor(public payload: EndpointModel) { }
 }
@@ -87,7 +92,9 @@ export type EndpointListActions
   = InitEndpointsAction
   | InitEndpointsFailedAction
   | AddAction
+  | RemoveAction
   | UpdateAction
   | EndpointAddedAction
+  | EndpointRemovedAction
   | EndpointUpdatedAction
   | EndpointsSyncedAction;
