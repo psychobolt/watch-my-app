@@ -1,7 +1,9 @@
 {
   "notifications": [{
     "interval": {
-      "duration": 0
+      "duration": {
+        "seconds": 6
+      }
     },
     "reportTypes" : [
       "Violation", 

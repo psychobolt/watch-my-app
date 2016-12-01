@@ -8,5 +8,6 @@ export interface PingResultModel {
 export const PingStatus = {
   DISCONNECTED: 0,
   FAILED: -1,
-  UNSUPPORTED: -2
+  UNSUPPORTED: -2,
+  STALE: 3
 };

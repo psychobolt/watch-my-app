@@ -42,6 +42,8 @@ export class PingEffects {
           return new PingUnsupportedAction(payload);
         case PingStatus.DISCONNECTED:
           return new Disconnected(payload);
+        case PingStatus.STALE:
+          return new PingCompletedAction();
         default:
           return new PingSuccessAction(payload)
       }
@@ -56,7 +58,7 @@ export class PingEffects {
     .switchMap((action: PingRetryAction) => Observable.of(action))
     .delay(5000)
     .flatMap((action: PingRetryAction) => this.endpointListService.getStoredEndpoint(action.payload.id || action.payload.value))
-    .map(payload => payload === null ? new PingCompletedAction(null) : new PingEndpointAction(payload));
+    .map(payload => payload === null ? new PingCompletedAction() : new PingEndpointAction(payload));
 
   constructor(
     private actions$: Actions,

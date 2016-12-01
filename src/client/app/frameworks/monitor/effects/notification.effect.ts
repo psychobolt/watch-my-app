@@ -6,10 +6,10 @@ import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { Action } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
-import * as moment from 'moment';
 
 // module
 import { NotificationService } from '../services/notification.service'; 
+import { NotificationModel } from '../models/notification.model';
 import { 
   InitNotificationsAction, 
   SendNotificationAction,
@@ -22,13 +22,10 @@ export class NotificationEffects {
   @Effect({dispatch: false}) init$ : Observable<Action> = this.actions$
     .ofType(NotificationActionTypes.INIT)
     .switchMap((action : InitNotificationsAction) => this.notificationService.getNotifcations())
-    .map(notifications => {
-      notifications.forEach(notification => {
-        console.log(moment.duration(notification.interval.duration).humanize());
-        moment.now() 
-      });
-      return null;
-    });
+    .mergeMap(notifications => 
+      Observable.from(notifications)
+        .flatMap(notification => this.notificationService.runNotifier(notification)))
+    .map(result => new SendNotificationAction(result));
 
   constructor(
     private actions$: Actions,

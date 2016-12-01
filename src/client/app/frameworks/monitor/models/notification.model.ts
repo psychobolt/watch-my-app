@@ -1,12 +1,11 @@
-export interface Notification {
+export interface NotificationModel {
   interval: Interval,
   ruleTypes: string[],
   emails: string[];
 }
 
 export interface Interval {
-  startTime?: number | string,
-  endTime?: number | string,
+  startTime?: number | string
   duration: Duration
 }
 

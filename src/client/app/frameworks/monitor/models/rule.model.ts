@@ -1,7 +1,7 @@
-import { Notification } from './notification.model';
+import { NotificationModel } from './notification.model';
 
 export interface RuleConfig {
-  notifications: Notification[],
+  notifications: NotificationModel[],
   endpoint: RuleModel[];
 }
 

@@ -1,6 +1,8 @@
 import { Action } from '@ngrx/store';
 import { type } from '../../core/utils/type';
 import { CATEGORY } from '../common/category.common';
+import { NotificationModel } from '../models/notification.model';
+import { ReportModel } from '../models/report.model'
 
 /**
  * For each action type in an action group, make a simple
@@ -30,7 +32,7 @@ export class InitNotificationsAction implements Action {
 
 export class SendNotificationAction implements Action {
   type = NotificationActionTypes.SEND;
-  payload: string = null;
+  constructor(payload: {notification: NotificationModel, reports: ReportModel[]}) { }
 }
 
 /**

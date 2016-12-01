@@ -26,7 +26,7 @@ export function reducer(
         pingActionStatus: 'ACTIVE',
         endpoints: state.endpoints.map((storedEndpoint) => 
           storedEndpoint.value === endpoint.value ?
-            endpointReportReducer(state, action, endpoint) : storedEndpoint)
+            endpointReportReducer(state, action, storedEndpoint) : storedEndpoint)
       });
     default:
       return state;

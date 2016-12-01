@@ -1,6 +1,7 @@
 import { join } from 'path';
 import * as slash from 'slash';
 import { argv } from 'yargs';
+import * as request from 'request';
 
 import { BuildType, ExtendPackages, InjectableDependency } from './seed.config.interfaces';
 
@@ -526,13 +527,25 @@ export class SeedConfig {
      * @type {any}
      */
     'browser-sync': {
-      middleware: [require('connect-history-api-fallback')({
-        index: `${this.APP_BASE}index.html`
-      })],
+      middleware: [
+        require('connect-history-api-fallback')({
+          index: `${this.APP_BASE}index.html`
+        }),
+        {
+          route: "/proxy",
+          handle: function (req: any, res: any, next: any) {
+            let url = req.url.substring(req.url.indexOf('http'));
+            req.pipe(request(url).on('error', (err: any) => {
+              next();
+            }), {end: true}).pipe(res, {end: true});
+          }
+        }
+      ],
       port: this.PORT,
       startPath: this.APP_BASE,
       open: argv['b'] ? false : true,
       injectChanges: false,
+      cors: true,
       server: {
         baseDir: `${this.DIST_DIR}/empty/`,
         routes: {

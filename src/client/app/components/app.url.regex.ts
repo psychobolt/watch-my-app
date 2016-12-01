@@ -54,7 +54,7 @@
 const URL_REGEX =
   "^" +
     // protocol identifier
-    "(?:(?:https?|ftp)://)" +
+    "(?:(?:https?)://)" +
     // user:pass authentication
     "(?:\\S+(?::\\S*)?@)?" +
     "(?:" +

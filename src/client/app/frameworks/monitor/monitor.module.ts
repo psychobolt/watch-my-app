@@ -1,6 +1,6 @@
 // angular
 import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { HttpModule, JsonpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 // module

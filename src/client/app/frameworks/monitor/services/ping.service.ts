@@ -1,6 +1,6 @@
 // angular
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
 
 //libs
 import { Store } from '@ngrx/store';
@@ -23,6 +23,9 @@ export class PingService {
   }
 
   pingEndpoint(endpoint: EndpointModel): Observable<number> {
+    if (!endpoint) {
+      return Observable.of(PingStatus.STALE);
+    }
     let startTime = performance.now();
     switch (endpoint.type) {
       case EndpointType.HEAD:
@@ -34,27 +37,28 @@ export class PingService {
     }
   }
 
-  private head(endpoint: EndpointModel, startTime: number): Observable<number> {
+  private head(endpoint: EndpointModel, startTime: number): Observable<any> {
     let ping;
-    return this.http.head(endpoint.value + "?" + new Date().getTime()).map(() => {
+    return this.http.head('proxy?url=' + endpoint.value).map((res) => {
       let endTime = performance.now(); 
       ping = endTime - startTime;
       return Observable.of(ping);
-    }).catch(err => {
-      // TODO disconnect
-      return Observable.of(PingStatus.FAILED);
-    });
+    }).catch(this.handleError);
   }
 
   private get(endpoint: EndpointModel, startTime: number): Observable<number> {
     let ping;
-    return this.http.get(endpoint.value + "?" + new Date().getTime()).map(() => {
+    return this.http.get('proxy?url=' + endpoint.value).map(() => {
       let endTime = performance.now(); 
       ping = endTime - startTime;
       return Observable.of(ping);
-    }).catch(err => {
-      // TODO disconnect
-      return Observable.of(PingStatus.FAILED);
-    });
+    }).catch(this.handleError);
+  }
+
+  private handleError(err: Response): Observable<number> {
+    if (err.status === 0) {
+      return Observable.of(PingStatus.DISCONNECTED);
+    }
+    return Observable.of(PingStatus.FAILED);
   }
 }
