@@ -44,3 +44,7 @@ a.link:hover {
 .pinging-status-label {
   color: blue;
 }
+
+.warning-label {
+  color: orange;
+}

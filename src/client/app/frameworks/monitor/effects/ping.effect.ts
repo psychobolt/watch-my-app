@@ -50,7 +50,7 @@ export class PingEffects {
     });
   
   @Effect() pingSuccessOrFailure$ : Observable<Action> = this.actions$
-    .ofType(PingActionTypes.PING_SUCCESS, PingActionTypes.PING_FAILED)
+    .ofType(PingActionTypes.PING_SUCCESS, PingActionTypes.PING_FAILED, PingActionTypes.DISCONNECTED)
     .map((action: PingSuccessAction) => new PingRetryAction(action.payload.endpoint));
 
   @Effect() pingRetry$ : Observable<Action> = this.actions$

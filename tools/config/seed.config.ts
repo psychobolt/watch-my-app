@@ -535,9 +535,24 @@ export class SeedConfig {
           route: "/proxy",
           handle: function (req: any, res: any, next: any) {
             let url = req.url.substring(req.url.indexOf('http'));
-            req.pipe(request(url).on('error', (err: any) => {
+            url += (url.indexOf('?') > -1 ? '&' : '?') + new Date().getTime();
+            req.pipe(request(url)
+              .on('response', () => {
+                res.end();
+              })
+              .on('error', (err: any) => {
+              switch (err.code) {
+                case 'ECONNREFUSED':
+                  res.writeHead(503);
+                  break;
+                case 'ENOTFOUND':
+                  res.writeHead(599);
+                  break;
+                default:
+              }
+              res.end();
               next();
-            }), {end: true}).pipe(res, {end: true});
+            }), {end: true}).pipe(res);
           }
         }
       ],

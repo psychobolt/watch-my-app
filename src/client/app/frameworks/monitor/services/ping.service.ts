@@ -37,28 +37,30 @@ export class PingService {
     }
   }
 
-  private head(endpoint: EndpointModel, startTime: number): Observable<any> {
-    let ping;
-    return this.http.head('proxy?url=' + endpoint.value).map((res) => {
-      let endTime = performance.now(); 
-      ping = endTime - startTime;
-      return Observable.of(ping);
-    }).catch(this.handleError);
+  private head(endpoint: EndpointModel, startTime: number): Observable<number> {
+    return this.http.head('proxy?' + new Date().getTime() + '&url=' + endpoint.value)
+      .map((res) => this.getPing(startTime))
+      .catch((err) => Observable.of(this.handleError(err, this.getPing(startTime))));
   }
 
   private get(endpoint: EndpointModel, startTime: number): Observable<number> {
-    let ping;
-    return this.http.get('proxy?url=' + endpoint.value).map(() => {
-      let endTime = performance.now(); 
-      ping = endTime - startTime;
-      return Observable.of(ping);
-    }).catch(this.handleError);
+    return this.http.get('proxy?' + new Date().getTime() + '&url=' + endpoint.value)
+      .map((res) => this.getPing(startTime))
+      .catch((err) => Observable.of(this.handleError(err, this.getPing(startTime))));
   }
 
-  private handleError(err: Response): Observable<number> {
-    if (err.status === 0) {
-      return Observable.of(PingStatus.DISCONNECTED);
+  private handleError(err: Response, ping: number): number {
+    if (err.status === 599) {
+      return PingStatus.DISCONNECTED;
+    } else if (err.status === 503) {
+      return PingStatus.FAILED;
     }
-    return Observable.of(PingStatus.FAILED);
+    return ping;
+  }
+
+  private getPing(startTime: number) {
+    let endTime = performance.now(); 
+    let ping = endTime - startTime;
+    return Math.floor(ping);
   }
 }

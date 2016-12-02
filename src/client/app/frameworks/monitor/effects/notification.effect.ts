@@ -25,7 +25,7 @@ export class NotificationEffects {
     .mergeMap(notifications => 
       Observable.from(notifications)
         .flatMap(notification => this.notificationService.runNotifier(notification)))
-    .map(result => new SendNotificationAction(result));
+    .map(result => null);
 
   constructor(
     private actions$: Actions,

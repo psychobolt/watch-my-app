@@ -1,24 +1,38 @@
 import { Action } from '@ngrx/store';
 import { 
     EndpointModel,
-    EndpointStatus,
     ChangeRuleModel,
     LimitRuleModel,
     RuleModelTypes,
     RuleModel,
     ReportModel,
-    ReportModelType
-} from '../models/index';
-import { IMonitorState } from '../state/monitor.state';
+    ReportModelType,
+    IMonitorState,
+    PingActionTypes,
+    NotificationSentAction,
+    NotificationActionTypes
+} from '../index';
 import * as assert from './assertion.reducer';
-import { PingActionTypes } from '../actions/ping.action';
 
-export function reducer(state: IMonitorState, action: Action) {
-  return state;
+export function reducer(state: IMonitorState, action: NotificationSentAction) {
+  switch (action.type) {
+    case NotificationActionTypes.SENT:
+      state = Object.assign({}, state, {
+        endpoints: state.endpoints.map(endpoint => {
+          return Object.assign({}, endpoint, {
+            reports: endpoint.reports.filter(report => {
+              return !action.payload.find(sentReport => sentReport === report);
+            })
+          })
+        })
+      });
+      return state;
+    default:
+      return state;
+  }
 }
 
-export function endpointReportReducer(state: IMonitorState, action: Action, endpoint: EndpointModel) {
-  let newEndpoint = transform(endpoint, action);
+export function endpointReportReducer(state: IMonitorState, action: Action, endpoint: EndpointModel, newEndpoint: EndpointModel) {
   let reports = endpoint.reports ? [...endpoint.reports] : [];
   state.rules.endpoint.forEach(rule => {
     let report: ReportModel;
@@ -32,21 +46,6 @@ export function endpointReportReducer(state: IMonitorState, action: Action, endp
     }
   });
   return Object.assign({}, newEndpoint, {reports});
-}
-
-function transform(endpoint: EndpointModel, action: Action) {
-  let status;
-  switch (action.type) {
-    case PingActionTypes.PING_SUCCESS:
-      status = EndpointStatus.ONLINE
-      break;
-    case PingActionTypes.PING_FAILED:
-      status = EndpointStatus.OFFLINE;
-      break;
-    default:
-      status = EndpointStatus.PINGING;
-  }
-  return Object.assign({}, endpoint, {status});
 }
 
 function applyReplacements(rule: RuleModel, endpoint: EndpointModel) {

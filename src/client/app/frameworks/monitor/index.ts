@@ -14,7 +14,7 @@ export * from './services/index';
 export * from './reducers/monitor.reducer';
 
 // state
-export * from './state/index';
+export * from './state/monitor.state';
 
 // models
 export * from './models/index';

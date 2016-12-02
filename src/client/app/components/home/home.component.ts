@@ -4,13 +4,20 @@ import { Observable } from 'rxjs/Observable';
 
 // app
 import { BaseComponent, RouterExtensions } from '../../frameworks/core/index';
-import { IAppState, getEndpoints } from '../../frameworks/ngrx/index';
+import { IAppState } from '../../frameworks/ngrx/index';
 import URL_REGEX from '../app.url.regex';
 
 // module
-import { AddAction, RemoveAction, InitEndpointsAction } from '../../frameworks/monitor/actions/endpoint-list.action';
-import { EndpointModel, EndpointStatus } from '../../frameworks/monitor/models/endpoint.model';
-
+import { 
+  AddAction,
+  RemoveAction,
+  InitEndpointsAction,
+  EndpointModel,
+  EndpointStatus,
+  PingStatus,
+  getEndpoints,
+  getPingServiceStatus
+} from '../../frameworks/monitor/index';
 
 @BaseComponent({
   moduleId: module.id,
@@ -19,7 +26,9 @@ import { EndpointModel, EndpointStatus } from '../../frameworks/monitor/models/e
   styleUrls: ['home.component.css']
 })
 export class HomeComponent {
+
   public endpoints$: Observable<Array<EndpointModel>>;
+  public pingServiceStatus$: Observable<String>;
   public newEndpoint: string = '';
   public URL_REGEX = URL_REGEX;
 
@@ -27,18 +36,23 @@ export class HomeComponent {
     private store: Store<IAppState>, 
     public routerext: RouterExtensions
   ) {
-    this.store.dispatch(new InitEndpointsAction());
     this.endpoints$ = store.let(getEndpoints);
+    this.pingServiceStatus$ = store.let(getPingServiceStatus);
+
+    this.store.dispatch(new InitEndpointsAction());
   }
 
-  getLabelStyle(endpoint: EndpointModel) {
-    switch (endpoint.status) {
+  getLabelStyle(status) {
+    switch (status) {
+      case 'DISCONNECTED':
+        return 'warning-label';
       case EndpointStatus.OFFLINE:
         return 'offline-status-label';
       case EndpointStatus.ONLINE:
         return 'online-status-label';
       case EndpointStatus.HIGH_LATENCY:
         return 'high-latency-status-label';
+      case 'ACTIVE':
       default:
         return 'pinging-status-label';
     }

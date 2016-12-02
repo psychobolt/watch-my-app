@@ -1,6 +1,6 @@
 export interface NotificationModel {
   interval: Interval,
-  ruleTypes: string[],
+  reportTypes: string[],
   emails: string[];
 }
 

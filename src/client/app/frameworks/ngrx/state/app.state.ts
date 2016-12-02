@@ -76,9 +76,5 @@ export function AppReducer(state: any, action: any) {
 export function getMultilingualState(state$: Observable<IAppState>) {
   return state$.select(s => s.i18n);
 }
-export function getMonitorState(state$: Observable<IAppState>) {
-  return state$.select(s => s.monitor);
-}
 
 export const getLang = compose(fromMultilingual.getLang, getMultilingualState);
-export const getEndpoints = compose(fromMonitor.getEndpoints, getMonitorState);

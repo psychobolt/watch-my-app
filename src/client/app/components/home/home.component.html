@@ -9,9 +9,12 @@
       </form>
       <div class="row">
         <div [hidden]="!url.value || url.valid || url.pristine" 
-          class="alert alert-danger col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">{{'INVALID_URL' | translate}}<p class="url-label">{{'INPUT_HINT' | translate}}</p></div>
+          class="alert alert-danger col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">{{'INVALID_URL_LABEL' | translate}}<p class="url-label">{{'INPUT_HINT' | translate}}</p></div>
       </div>
     </div>
+  </div>
+  <div class="row">
+    <p>{{'PING_SERVICE_LABEL' | translate}}<span class="{{getLabelStyle(pingServiceStatus$ | async)}}">{{(pingServiceStatus$ | async) | translate}}</span></p>
   </div>
   <div class="row" *ngIf="(endpoints$ | async).length > 0">
     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-8 col-xl-6">
@@ -21,13 +24,15 @@
             <th width="100px">{{'STATUS' | translate}}</th>
             <th>{{'REQUEST_TYPE' | translate}}</th>
             <th>{{'ENDPOINT' | translate}}</th>
+            <th>{{'RESPONSE_TIME' | translate}} (ms)</th>
             <th></th>
           </thead>
           <tbody>
             <tr *ngFor="let endpoint of (endpoints$ | async)">
-                <td class="{{getLabelStyle(endpoint)}}">{{(endpoint.status || 'PINGING') | translate}}</td>
+                <td class="{{getLabelStyle(endpoint.status)}}">{{(endpoint.status || 'PINGING') | translate}}</td>
                 <td>{{endpoint.type}}</td>
                 <td><a target="_blank" href="{{endpoint.value}}">{{endpoint.value}}</a></td>
+                <td>{{endpoint.ping}}</td>
                 <td><i class="icon-button fa fa-trash" (click)="removeEndpoint(endpoint)" aria-hidden="true"></i></td>
             </tr>
           </tbody>

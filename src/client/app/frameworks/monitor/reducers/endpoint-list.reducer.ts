@@ -2,12 +2,10 @@ import {
   EndpointListActions,
   EndpointsSyncedAction,
   EndpointListActionTypes, 
-} from '../actions/index';
-import { 
   IMonitorState, 
-  initialState 
-} from '../state/index';
-import { EndpointModel } from '../models/endpoint.model';
+  initialState, 
+  EndpointModel 
+} from '../index';
 
 export function reducer(
   state: IMonitorState = initialState,

@@ -10,19 +10,27 @@ import * as moment from 'moment';
 
 // app
 import { IAppState } from '../../../frameworks/ngrx/state/app.state';
+import { Analytics, AnalyticsService } from '../../analytics/index';
 
 // module
 import { NotificationModel } from '../models/notification.model';
-import { InitNotificationsAction } from '../actions/notification.action';
+import { 
+  InitNotificationsAction,
+  NotificationSentAction
+} from '../actions/notification.action';
 import { ReportModel } from '../models/report.model';
+import { CATEGORY } from '../common/category.common';
 
 @Injectable()
-export class NotificationService {
+export class NotificationService extends Analytics  {
 
   constructor(
     private http: Http,
-    private store: Store<IAppState>
+    private store: Store<IAppState>,
+    public analytics: AnalyticsService
   ) {
+    super(analytics);
+    this.category = CATEGORY;
     this.store.dispatch(new InitNotificationsAction());
   }
 
@@ -50,14 +58,20 @@ export class NotificationService {
           return reports;
         }
         return [...reports, ...endpoint.reports.filter(report => {
-          return notification.ruleTypes.includes(report.rule.type) 
+          return notification.reportTypes.find(ruleType => ruleType === report.rule.reportType);
         })];
       }, <Array<ReportModel>>[])).map(reports => {
-        return { reports, notification};
+        if (reports.length) {
+          this.sendEmail(notification, reports);
+        }
+        return { reports, notification };
       });
   }
 
-  sendEmail() {
-    console.log('sending email');
+  sendEmail(notification: NotificationModel, reports: ReportModel[]) {
+    let report = JSON.stringify(reports);
+    this.track("Report", report);
+    console.log(report);
+    this.store.dispatch(new NotificationSentAction(reports));
   }
 }

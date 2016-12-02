@@ -15,7 +15,8 @@ import { ReportModel } from '../models/report.model'
 
 export const NotificationActionTypes = {
   INIT: type(`[${CATEGORY}] Notifications Init`),
-  SEND: type(`[${CATEGORY}] Send Notification`)
+  SEND: type(`[${CATEGORY}] Send Notification`),
+  SENT: type(`[${CATEGORY}] Notifications Sent`)
 };
 
 /**
@@ -32,7 +33,12 @@ export class InitNotificationsAction implements Action {
 
 export class SendNotificationAction implements Action {
   type = NotificationActionTypes.SEND;
-  constructor(payload: {notification: NotificationModel, reports: ReportModel[]}) { }
+  constructor(public payload: {notification: NotificationModel, reports: ReportModel[]}) { }
+}
+
+export class NotificationSentAction implements Action {
+  type = NotificationActionTypes.SENT;
+  constructor(public payload: ReportModel[]) { }
 }
 
 /**

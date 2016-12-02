@@ -3,6 +3,9 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
+// app
+import { AnalyticsService } from '../analytics/index';
+
 // module
 import { 
   DatabaseService, 
@@ -24,7 +27,8 @@ import {
     DatabaseService,
     EndpointListService,
     PingService,
-    NotificationService
+    NotificationService,
+    AnalyticsService
   ]
 })
 export class MonitorModule {
