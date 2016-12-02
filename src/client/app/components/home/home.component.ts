@@ -36,13 +36,13 @@ export class HomeComponent {
     private store: Store<IAppState>, 
     public routerext: RouterExtensions
   ) {
-    this.endpoints$ = store.let(getEndpoints);
+    this.endpoints$ = store.let<any>(getEndpoints);
     this.pingServiceStatus$ = store.let(getPingServiceStatus);
 
     this.store.dispatch(new InitEndpointsAction());
   }
 
-  getLabelStyle(status) {
+  getLabelStyle(status): string {
     switch (status) {
       case 'DISCONNECTED':
         return 'warning-label';
@@ -56,7 +56,6 @@ export class HomeComponent {
       default:
         return 'pinging-status-label';
     }
-  }
 
   /*
    * @param newEndpoint  any text as input.

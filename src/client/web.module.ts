@@ -74,9 +74,7 @@ export function cons() {
 }
 
 // app components
-import { AppComponent } from './app/components/app.component';
-import { HomeComponent } from './app/components/home/home.component';
-import { AboutComponent } from './app/components/about/about.component';
+import { APP_COMPONENTS, AppComponent } from './app/components/index';
 
 @NgModule({
   imports: [
@@ -102,9 +100,7 @@ import { AboutComponent } from './app/components/about/about.component';
     EffectsModule.run(NotificationEffects)
   ],
   declarations: [
-    AppComponent,
-    HomeComponent,
-    AboutComponent
+    APP_COMPONENTS
   ],
   providers: [
     {
