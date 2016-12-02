@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { SeedAdvancedConfig } from './seed-advanced.config';
-// import { ExtendPackages } from './seed.config.interfaces';
+import { ExtendPackages } from './seed.config.interfaces';
 
 /**
  * This class extends the basic seed configuration, allowing for project specific overrides. A few examples can be found
@@ -20,8 +20,24 @@ export class ProjectConfig extends SeedAdvancedConfig {
     // Add `NPM` third-party libraries to be injected/bundled.
     this.NPM_DEPENDENCIES = [
       ...this.NPM_DEPENDENCIES,
-      // {src: 'jquery/dist/jquery.min.js', inject: 'libs'},
+      // {src: 'jquery/dist/jquery.min.js', inject: 'libs'}
+      {src: 'bootstrap/dist/css/bootstrap.min.css', inject: true},
+      {src: 'font-awesome/css/font-awesome.css', inject: true}
     ];
+
+    // Configure global loader plugins
+    this.addMapConfig({
+      name: 'json',
+      config: 'systemjs-plugin-json/json.js' 
+    });
+
+    // Configure loader extensions
+    this.addMetaConfig({
+      name: '*.json',
+      config: {
+        loader: 'json'
+      }
+    });
 
     // Add `local` third-party libraries to be injected/bundled.
     this.APP_ASSETS = [
@@ -42,7 +58,7 @@ export class ProjectConfig extends SeedAdvancedConfig {
     //
     // or
     //
-    // let additionalPackages: ExtendPackages[] = [];
+    let additionalPackages: ExtendPackages[] = [];
     //
     // additionalPackages.push({
     //   name: 'lodash',
@@ -53,10 +69,50 @@ export class ProjectConfig extends SeedAdvancedConfig {
     //   }
     // });
     //
-    // this.addPackagesBundles(additionalPackages);
+
+    additionalPackages.push({
+      name: 'firebase',
+      path: `${this.APP_BASE}node_modules/firebase/firebase.js`
+    });
+
+    additionalPackages.push({
+      name: '@ngrx/store-log-monitor',
+      path: `${this.APP_BASE}node_modules/@ngrx/store-log-monitor/bundles/store-log-monitor.umd.js`
+    });
+
+    additionalPackages.push({
+      name: 'moment',
+      packageMeta: {
+        main: 'moment.js'
+      }
+    });
+
+    this.addPackagesBundles(additionalPackages);
 
     /* Add to or override NPM module configurations: */
     // this.mergeObject(this.PLUGIN_CONFIGS['browser-sync'], { ghostMode: false });
+  }
+
+  addMapConfig(options: any) {
+    if (!this.SYSTEM_CONFIG_DEV.map) {
+      this.SYSTEM_CONFIG_DEV.map = {};
+    }
+    if (!this.SYSTEM_BUILDER_CONFIG.map) {
+      this.SYSTEM_BUILDER_CONFIG.map = {};
+    }
+    this.SYSTEM_CONFIG_DEV.map[options.name] = options.config;
+    this.SYSTEM_BUILDER_CONFIG.map[options.name] = options.config;
+  }
+
+  addMetaConfig(options: any) {
+    if (!this.SYSTEM_CONFIG_DEV.meta) {
+      this.SYSTEM_CONFIG_DEV.meta = {};
+    }
+    if (!this.SYSTEM_BUILDER_CONFIG.meta) {
+      this.SYSTEM_BUILDER_CONFIG.meta = {};
+    }
+    this.SYSTEM_CONFIG_DEV.meta[options.name] = options.config;
+    this.SYSTEM_BUILDER_CONFIG.meta[options.name] = options.config;
   }
 
 }

@@ -6,15 +6,14 @@ import { RouterModule } from '@angular/router';
 import { Http } from '@angular/http';
 
 // libs
+import 'rxjs/Rx';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StoreLogMonitorModule, useLogMonitor } from '@ngrx/store-log-monitor';
 import { TranslateLoader } from 'ng2-translate';
 
-// app
-import { AppComponent } from './app/components/app.component';
-import { HomeComponent } from './app/components/home/home.component';
-import { AboutComponent } from './app/components/about/about.component';
+// app routes
 import { routes } from './app/components/app.routes';
 
 // feature modules
@@ -23,9 +22,9 @@ import { AppReducer } from './app/frameworks/ngrx/index';
 import { AnalyticsModule } from './app/frameworks/analytics/analytics.module';
 import { MultilingualModule, translateFactory } from './app/frameworks/i18n/multilingual.module';
 import { MultilingualEffects } from './app/frameworks/i18n/index';
+import { MonitorModule } from './app/frameworks/monitor/monitor.module';
+import { EndpointListEffects, PingEffects, NotificationEffects } from './app/frameworks/monitor/index';
 import { SampleModule } from './app/frameworks/sample/sample.module';
-import { NameListEffects } from './app/frameworks/sample/index';
-
 // config
 import { Config, WindowService, ConsoleService } from './app/frameworks/core/index';
 Config.PLATFORM_TARGET = Config.PLATFORMS.WEB;
@@ -48,6 +47,22 @@ if (String('<%= TARGET_DESKTOP %>') === 'true') {
   routerModule = RouterModule.forRoot(routes, {useHash: true});
 }
 
+// store-dev tools
+let storeDevtoolsModules = [];
+if (String('<%= TARGET_DESKTOP %>') === 'true') {
+  storeDevtoolsModules = [
+    StoreDevtoolsModule.instrumentStore({
+      monitor: useLogMonitor({
+        visible: true,
+        position: 'right'
+      })
+    }),
+    StoreLogMonitorModule
+  ];
+} else {
+  storeDevtoolsModules = [StoreDevtoolsModule.instrumentOnlyWithExtension()]
+}
+
 declare var window, console;
 
 // For AoT compilation to work:
@@ -57,6 +72,11 @@ export function win() {
 export function cons() {
   return console;
 }
+
+// app components
+import { AppComponent } from './app/components/app.component';
+import { HomeComponent } from './app/components/home/home.component';
+import { AboutComponent } from './app/components/about/about.component';
 
 @NgModule({
   imports: [
@@ -72,11 +92,14 @@ export function cons() {
       deps: [Http],
       useFactory: (translateFactory)
     }]),
+    MonitorModule,
     SampleModule,
     StoreModule.provideStore(AppReducer),
-    StoreDevtoolsModule.instrumentOnlyWithExtension(),
+    ...storeDevtoolsModules,
     EffectsModule.run(MultilingualEffects),
-    EffectsModule.run(NameListEffects)
+    EffectsModule.run(EndpointListEffects),
+    EffectsModule.run(PingEffects),
+    EffectsModule.run(NotificationEffects)
   ],
   declarations: [
     AppComponent,

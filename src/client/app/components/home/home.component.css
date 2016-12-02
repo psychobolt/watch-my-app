@@ -3,10 +3,6 @@
   padding: 0 16px;
 }
 
-input {
-  width: 250px;
-}
-
 ul {
   list-style-type: none;
   padding: 0 0 0 8px;
@@ -31,4 +27,24 @@ a.link {
 
 a.link:hover {
   color: #f00;
+}
+
+.offline-status-label {
+  color: red;
+}
+
+.online-status-label {
+  color: green;
+}
+
+.high-latency-status-label {
+  color: yellow;
+}
+
+.pinging-status-label {
+  color: blue;
+}
+
+.warning-label {
+  color: orange;
 }

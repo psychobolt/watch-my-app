@@ -1,0 +1,45 @@
+{
+  "notifications": [{
+    "interval": {
+      "duration": {
+        "seconds": 6
+      }
+    },
+    "reportTypes" : [
+      "Violation", 
+      "Fixed"
+    ],
+    "emails": []
+  }, {
+    "interval": {
+      "startTime": "23:59:59.999",
+      "duration": "23:59:59.999"
+    },
+    "reportTypes" : [
+      "Violation"
+    ],
+    "emails": []
+  }],
+  "endpoint": [{
+    "property": "status",
+    "type": "ChangeRule",
+    "oldValue": "ONLINE",
+    "newValue": "OFFLINE",
+    "reportType": "Violation"
+  }, {
+    "property": "status",
+    "type": "ChangeRule",
+    "oldValue": "OFFLINE",
+    "newValue": "ONLINE",
+    "reportType": "Fixed"
+  }, {
+    "property": "ping",
+    "type": "LimitRuleModel",
+    "limit": 500,
+    "replace": {
+      "property": "status",
+      "newValue": "HIGH_LATENCY"
+    },
+    "reportType": "Violation"
+  }]
+}

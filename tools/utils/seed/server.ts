@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as request from 'request';
 import * as fallback from 'express-history-api-fallback';
 import * as openResource from 'open';
 import { resolve } from 'path';
@@ -37,6 +38,8 @@ export function serveDocs() {
   server.listen(Config.DOCS_PORT, () =>
     openResource('http://localhost:' + Config.DOCS_PORT + Config.APP_BASE)
   );
+
+  server.get('/')
 }
 
 /**

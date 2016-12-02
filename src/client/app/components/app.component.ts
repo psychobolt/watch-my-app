@@ -13,10 +13,11 @@ import { BaseComponent, Config, LogService } from '../frameworks/core/index';
 @BaseComponent({
   moduleId: module.id,
   selector: 'sd-app',
-  templateUrl: 'app.component.html',
+  templateUrl: Config.IS_DESKTOP() ? 'app.desktop.component.html' : 'app.component.html',
   changeDetection: ChangeDetectionStrategy.Default // Everything else uses OnPush
 })
 export class AppComponent {
+
   constructor(public analytics: AnalyticsService, public logger: LogService) {
     logger.debug(`Config env: ${Config.ENVIRONMENT().ENV}`);
   }

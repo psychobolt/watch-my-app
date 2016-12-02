@@ -29,6 +29,8 @@ import { MultilingualModule, translateFactory } from './app/frameworks/i18n/mult
 import { MultilingualEffects } from './app/frameworks/i18n/index';
 import { SampleModule } from './app/frameworks/sample/sample.module';
 import { NameListEffects } from './app/frameworks/sample/index';
+import { FIREBASE } from './app/frameworks/monitor/index';
+var firebase = require('nativescript-plugin-firebase');
 
 // {N} custom app specific
 import { WindowNative } from './shared/core/index';
@@ -88,7 +90,8 @@ export function cons() {
   ],
   providers: [
     NS_ANALYTICS_PROVIDERS,
-    { provide: RouterExtensions, useClass: TNSRouterExtensions }
+    { provide: RouterExtensions, useClass: TNSRouterExtensions },
+    { provide: FIREBASE, useFactory: () => { return firebase; } }
   ],
   bootstrap: [NSAppComponent]
 })
