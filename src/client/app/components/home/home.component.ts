@@ -56,7 +56,8 @@ export class HomeComponent {
       default:
         return 'pinging-status-label';
     }
-
+  }
+  
   /*
    * @param newEndpoint  any text as input.
    * @returns return false to prevent default form submit behavior to refresh the page.
