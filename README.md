@@ -78,22 +78,22 @@ Currently the only data property that can be applied is __endpoint__.
 Describes reports that should be notified or tracked. Notifications poll constantly for reports to send.
 
 - inverval 
-  - __startTime__ (optional): Type <number | string> If you require a offset time when 
-  - __duration__: Type <string | Duration>. How often to perform report checking. Can be a string e.g. HH:MM:ss.mmm.
-- __emails__: Type <Array<String |> |> Emails that should receive the generated reports
-- __reportTypes__: Type <Array<String |> |>
+  - __startTime__ (optional): \<number | string> If you require a offset time when 
+  - __duration__: \<string | Duration>. How often to perform report checking. Can be a string e.g. HH:MM:ss.mmm.
+- __emails__: \<Array<String |> |> Emails that should receive the generated reports
+- __reportTypes__: \<Array<String>>
 
 #### Duration Types
 
 Supported number properties:
 
-- __seconds__ Type <number |>
-- __minutes__ Type <number |>
-- __hours__ Type <number |>
-- __days__ Type <number |>
-- __weeks__ Type <number |>
-- __months__ Type <number |>
-- __years__ Type <number |>
+- __seconds__: \<number>
+- __minutes__: \<number>
+- __hours__: \<number>
+- __days__: \<number>
+- __weeks__: \<number>
+- __months__: \<number>
+- __years__: \<number>
 
 #### Report Types
 
@@ -111,16 +111,16 @@ All rules require a property
 
 All rules required rules
 
-- __type__: Type <string |> See Rule Types.
-- __property__: Type <string |> The property name that the rule should be applied to.
-- __reportType__: Type <string |> See Report Type.
+- __type__: \<string> See Rule Types.
+- __property__: \<string> The property name that the rule should be applied to.
+- __reportType__: \<string> See Report Type.
 
 #### Change Rule
 
 Assert that value changes
 
-- __oldValue__ Type <string | number>
-- __newValue__ Type <string | number>
+- __oldValue__ \<string | number>
+- __newValue__ \<string | number>
 
 #### Limit Rule
 
