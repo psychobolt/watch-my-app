@@ -3,6 +3,8 @@ export * from './actions/index';
 
 // components
 
+// common
+export * from './common/category.common';
 
 // effects
 export * from './effects/index';

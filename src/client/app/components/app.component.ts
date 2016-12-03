@@ -13,7 +13,7 @@ import { BaseComponent, Config, LogService } from '../frameworks/core/index';
 @BaseComponent({
   moduleId: module.id,
   selector: 'sd-app',
-  templateUrl: Config.IS_DESKTOP() ? 'app.desktop.component.html' : 'app.component.html',
+  templateUrl: String('<%= TARGET_DESKTOP %>') === 'true' ? 'app.desktop.component.html' : 'app.component.html',
   changeDetection: ChangeDetectionStrategy.Default // Everything else uses OnPush
 })
 export class AppComponent {

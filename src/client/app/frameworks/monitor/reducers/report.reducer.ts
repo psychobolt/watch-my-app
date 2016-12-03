@@ -17,16 +17,26 @@ import * as assert from './assertion.reducer';
 export function reducer(state: IMonitorState, action: NotificationSentAction) {
   switch (action.type) {
     case NotificationActionTypes.SENT:
-      state = Object.assign({}, state, {
+      return Object.assign({}, state, {
         endpoints: state.endpoints.map(endpoint => {
+          let reports = [];
+          endpoint.reports.forEach(report => {
+            let emails = state.rules.notifications
+              .reduce((emails, notification) => [...emails, ...notification.emails], [])
+              .filter(email => report.reportedTo.indexOf(email) === -1);
+            let notificationEmails = action.payload.notification.emails.filter(email => emails.indexOf(email) === -1);
+            if (emails.length && notificationEmails.length) {
+              reports = [...reports, Object.assign({}, report, {
+                reported: true,
+                reportedTo: [...report.reportedTo, ...action.payload.notification.emails]
+              })];
+            }
+          });
           return Object.assign({}, endpoint, {
-            reports: endpoint.reports.filter(report => {
-              return !action.payload.find(sentReport => sentReport === report);
-            })
-          })
+            reports: reports
+          });
         })
       });
-      return state;
     default:
       return state;
   }
@@ -41,7 +51,7 @@ export function endpointReportReducer(state: IMonitorState, action: Action, endp
     } else {
       report = applyAssertions(rule, endpoint, newEndpoint);
     }
-    if (report && !canSkipReport(report, endpoint)) {
+    if (report) {
       reports = [...reports, report];
     }
   });
@@ -71,33 +81,4 @@ function applyAssertions(rule: RuleModel, oldEndpoint: EndpointModel, newEndpoin
       break;
   }
   return report;
-}
-
-function canSkipReport(report: ReportModel, endpoint: EndpointModel): boolean {
-  switch (report.rule.type) {
-      case ReportModelType.FIXED:
-        let resolved = endpoint.reports.filter(oldReport => {
-          oldReport.rule.type === report.rule.type
-          && oldReport.rule.property === report.rule.property
-          && oldReport.rule.reportType === ReportModelType.VIOLATION 
-          && report.rule.reportType === ReportModelType.FIXED
-          switch (report.rule.reportType) {
-            case RuleModelTypes.CHANGE_RULE:
-              let oldRule = oldReport.rule as ChangeRuleModel;
-              let newRule = report.rule as ChangeRuleModel;
-              if (oldRule.newValue === newRule.oldValue) {
-                return true;
-              }
-              return false;
-            default:
-              return false;
-          }
-        });
-        if (!resolved) {
-          return true;
-        }
-        return false;
-    default:
-      return false
-  }
 }

@@ -9,4 +9,6 @@ export class ReportModel {
   rule: RuleModel;
   message: string;
   date: Date;
+  reported: boolean;
+  reportedTo: string[]
 }

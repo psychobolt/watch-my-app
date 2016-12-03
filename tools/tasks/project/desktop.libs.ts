@@ -14,7 +14,8 @@ export = () => {
     'node_modules/ngrx-store-freeze/**/*',
     'node_modules/deep-freeze/**/*',
     'node_modules/firebase/**/*',
-    'node_modules/systemjs-plugin-json/**/*'
+    'node_modules/systemjs-plugin-json/**/*',
+    'node_modules/moment/**/*'
   ];
 
   src.push(...Config.NPM_DEPENDENCIES.map(x => relative(Config.PROJECT_ROOT, x.src)));

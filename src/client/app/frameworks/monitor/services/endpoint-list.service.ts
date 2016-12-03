@@ -11,13 +11,19 @@ import { Analytics, AnalyticsService } from '../../analytics/index';
 import { IAppState } from '../../../frameworks/ngrx/state/app.state';
 
 // module
-import { CATEGORY } from '../common/category.common';
-import { EndpointModel, EndpointType } from '../models/endpoint.model';
-import { InitEndpointsAction } from '../actions/endpoint-list.action';
-import { DatabaseService } from '../services/database.service';
+import { 
+  CATEGORY,
+  EndpointModel, 
+  EndpointType,
+  InitEndpointsAction,
+  getEndpoints
+ } from '../index';
+ import { DatabaseService } from '../services/database.service';
 
 @Injectable()
 export class EndpointListService extends Analytics {
+
+  private endpoints = <Array<EndpointModel>>[];
 
   constructor(
     public database: DatabaseService,
@@ -26,6 +32,9 @@ export class EndpointListService extends Analytics {
   ) {
     super(analytics);
     this.category = CATEGORY;
+    this.store.let(getEndpoints).subscribe(endpoints => {
+      this.endpoints = endpoints
+    });
   }
 
   getEndpoints(): Observable<Array<EndpointModel>> {
@@ -41,12 +50,7 @@ export class EndpointListService extends Analytics {
   }
 
   getStoredEndpoints(): Observable<Array<EndpointModel>> {
-    return Observable.create((observer: Observer<Array<EndpointModel>>) => {
-      this.store.select(state => state.monitor.endpoints).subscribe(endpoints => {
-        observer.next(endpoints);
-        observer.complete();
-      });
-    });
+    return Observable.of(this.endpoints);
   }
 
   getStoredEndpoint(endpointOrId: string): Observable<EndpointModel> {

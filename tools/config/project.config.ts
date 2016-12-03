@@ -1,6 +1,8 @@
 import { join } from 'path';
 import { SeedAdvancedConfig } from './seed-advanced.config';
 import { ExtendPackages } from './seed.config.interfaces';
+import { argv } from 'yargs';
+import { proxyHandle } from '../utils/seed/server';
 
 /**
  * This class extends the basic seed configuration, allowing for project specific overrides. A few examples can be found
@@ -10,12 +12,51 @@ export class ProjectConfig extends SeedAdvancedConfig {
 
   PROJECT_TASKS_DIR = join(process.cwd(), this.TOOLS_DIR, 'tasks', 'project');
 
+  FONTS_DEST = `${this.APP_DEST}/fonts`;
+  FONTS_SRC = [
+    'node_modules/font-awesome/fonts/**'
+  ];
+
+  APP_PROXY = 'proxy';
+
   constructor() {
     super();
     // this.APP_TITLE = 'Put name of your app here';
 
     /* Enable typeless compiler runs (faster) between typed compiler runs. */
     // this.TYPED_COMPILE_INTERVAL = 5;
+
+    /**
+     * The BrowserSync configuration of the application.
+     * The default open behavior is to open the browser. To prevent the browser from opening use the `--b`  flag when
+     * running `npm start` (tested with serve.dev).
+     * Example: `npm start -- --b`
+     */
+    let APP_BASE = this.APP_BASE || '/';
+    this.PLUGIN_CONFIGS['browser-sync'] = {
+      middleware: [
+        require('connect-history-api-fallback')({
+          index: `${APP_BASE}index.html`
+        }),
+        {
+          route: APP_BASE + this.APP_PROXY,
+          handle: proxyHandle
+        }
+      ],
+      port: this.PORT,
+      startPath: APP_BASE,
+      open: argv['b'] ? false : true,
+      injectChanges: false,
+      server: {
+        baseDir: `${this.DIST_DIR}/empty/`,
+        routes: {
+          [`${APP_BASE}${this.APP_SRC}`]: this.APP_SRC,
+          [`${APP_BASE}${this.APP_DEST}`]: this.APP_DEST,
+          [`${APP_BASE}node_modules`]: 'node_modules',
+          [`${APP_BASE.replace(/\/$/, '')}`]: this.APP_DEST
+        }
+      }
+    };
 
     // Add `NPM` third-party libraries to be injected/bundled.
     this.NPM_DEPENDENCIES = [

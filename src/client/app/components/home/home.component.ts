@@ -45,6 +45,7 @@ export class HomeComponent {
   getLabelStyle(status): string {
     switch (status) {
       case 'DISCONNECTED':
+      case 'DOWN':
         return 'warning-label';
       case EndpointStatus.OFFLINE:
         return 'offline-status-label';

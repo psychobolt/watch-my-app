@@ -38,7 +38,10 @@ export class SendNotificationAction implements Action {
 
 export class NotificationSentAction implements Action {
   type = NotificationActionTypes.SENT;
-  constructor(public payload: ReportModel[]) { }
+  constructor(public payload: {
+    notification: NotificationModel,
+    reports: ReportModel[]
+  }) { }
 }
 
 /**

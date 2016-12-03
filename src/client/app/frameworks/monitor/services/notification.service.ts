@@ -5,6 +5,7 @@ import { Http } from '@angular/http';
 // libs
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { TimeInterval } from 'rxjs/operator/timeInterval';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 
@@ -13,13 +14,16 @@ import { IAppState } from '../../../frameworks/ngrx/state/app.state';
 import { Analytics, AnalyticsService } from '../../analytics/index';
 
 // module
-import { NotificationModel } from '../models/notification.model';
 import { 
+  EndpointModel,
+  NotificationModel,
   InitNotificationsAction,
-  NotificationSentAction
-} from '../actions/notification.action';
-import { ReportModel } from '../models/report.model';
-import { CATEGORY } from '../common/category.common';
+  NotificationSentAction,
+  NotificationActionTypes,
+  ReportModel,
+  CATEGORY 
+} from '../index';
+import { EndpointListService } from '../services/endpoint-list.service';
 
 @Injectable()
 export class NotificationService extends Analytics  {
@@ -27,7 +31,8 @@ export class NotificationService extends Analytics  {
   constructor(
     private http: Http,
     private store: Store<IAppState>,
-    public analytics: AnalyticsService
+    public analytics: AnalyticsService,
+    private endpointListService: EndpointListService
   ) {
     super(analytics);
     this.category = CATEGORY;
@@ -38,10 +43,19 @@ export class NotificationService extends Analytics  {
     return this.store.select(state => state.monitor.rules.notifications);
   }
 
-  runNotifier(notification: NotificationModel): Observable<{
-    notification: NotificationModel, 
-    reports: Array<ReportModel>
-  }> {
+  runNotifier(notification: NotificationModel) {
+    this.getInterval(notification).subscribe((x) => {
+      this.endpointListService.getStoredEndpoints()
+        .subscribe(endpoints => {
+          this.sendNotification(notification, endpoints.reduce((reports, endpoint) => endpoint.reports ? 
+            [...reports, ...endpoint.reports.filter(report => notification.reportTypes
+              .find(ruleType => ruleType === report.rule.reportType))] 
+            : [], <Array<ReportModel>>[]));
+        });
+    });
+  }
+
+  private getInterval(notification: NotificationModel): Observable<TimeInterval<number>> {
     let duration = moment.duration(notification.interval.duration);
     let nextStartTime: number | Moment;
     if (notification.interval.startTime) {
@@ -51,27 +65,14 @@ export class NotificationService extends Analytics  {
     } else {
       nextStartTime = 0;
     }
-    return Observable.timer(nextStartTime.valueOf(), duration.asMilliseconds()).timeInterval()
-      .flatMap(() => this.store.select(state => state.monitor.endpoints))
-      .map(endpoints => endpoints.reduce((reports, endpoint) => {
-        if (!endpoint.reports) {
-          return reports;
-        }
-        return [...reports, ...endpoint.reports.filter(report => {
-          return notification.reportTypes.find(ruleType => ruleType === report.rule.reportType);
-        })];
-      }, <Array<ReportModel>>[])).map(reports => {
-        if (reports.length) {
-          this.sendEmail(notification, reports);
-        }
-        return { reports, notification };
-      });
+    return Observable.timer(nextStartTime.valueOf(), duration.asMilliseconds()).timeInterval();
   }
 
-  sendEmail(notification: NotificationModel, reports: ReportModel[]) {
-    let report = JSON.stringify(reports);
-    this.track("Report", report);
-    console.log(report);
-    this.store.dispatch(new NotificationSentAction(reports));
+  private sendNotification(notification: NotificationModel, reports: ReportModel[]) {
+    if (!reports.length) {
+      return;
+    }
+    this.track(NotificationActionTypes.SEND, {label: JSON.stringify(reports)});
+    this.store.dispatch(new NotificationSentAction({notification, reports}));
   }
 }

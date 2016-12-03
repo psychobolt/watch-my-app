@@ -42,7 +42,7 @@
     "serve.prod.exp": "gulp serve.prod.exp --color --env-config prod",
     "start": "gulp serve.dev --color",
     "start.deving": "gulp start.deving --color",
-    "start.desktop": "gulp desktop && NODE_ENV=development electron ./dist/dev",
+    "start.desktop": "gulp desktop && NODE_ENV=development&& electron ./dist/dev",
     "start.livesync.desktop": "gulp desktop && NODE_ENV=development gulp desktop.watch",
     "start.livesync.desktop.windows": "gulp desktop && SET NODE_ENV=development && gulp desktop.watch",
     "start.desktop.windows": "gulp desktop && SET NODE_ENV=development && electron ./dist/dev",

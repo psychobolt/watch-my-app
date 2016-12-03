@@ -71,9 +71,33 @@ export function serveProd() {
 
   server.use(Config.APP_BASE, express.static(root));
 
+  server.use((Config.APP_BASE || '/') + Config.APP_PROXY, proxyHandle);
+
   server.use(fallback('index.html', { root }));
 
   server.listen(Config.PORT, () =>
     openResource('http://localhost:' + Config.PORT + Config.APP_BASE)
   );
 };
+
+export function proxyHandle(req: express.Request, res: express.Response, next: express.NextFunction) {
+  let url = req.url.substring(req.url.indexOf('http'));
+  url += (url.indexOf('?') > -1 ? '&' : '?') + new Date().getTime();
+  req.pipe(request(url)
+    .on('response', () => {
+      res.end();
+    })
+    .on('error', (err: any) => {
+    switch (err.code) {
+      case 'ECONNREFUSED':
+        res.writeHead(503);
+        break;
+      case 'ENOTFOUND':
+        res.writeHead(599);
+        break;
+      default:
+    }
+    res.end();
+    next();
+  }), {end: true}).pipe(res);
+}

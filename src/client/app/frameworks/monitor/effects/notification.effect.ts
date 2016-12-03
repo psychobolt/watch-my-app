@@ -22,10 +22,10 @@ export class NotificationEffects {
   @Effect({dispatch: false}) init$ : Observable<Action> = this.actions$
     .ofType(NotificationActionTypes.INIT)
     .switchMap((action : InitNotificationsAction) => this.notificationService.getNotifcations())
-    .mergeMap(notifications => 
-      Observable.from(notifications)
-        .flatMap(notification => this.notificationService.runNotifier(notification)))
-    .map(result => null);
+    .do(notifications => {
+      notifications.forEach(notification => this.notificationService.runNotifier(notification))
+    })
+    .map(notifications => null);
 
   constructor(
     private actions$: Actions,

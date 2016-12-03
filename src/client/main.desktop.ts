@@ -24,9 +24,9 @@ import { AppConfig } from './app/frameworks/sample/services/app-config';
 //   autoSubmit: true
 // });
 
-//if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
   require('electron-debug')();
-//}
+}
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -40,8 +40,7 @@ app.on('ready', () => {
   mainWindow = new BrowserWindow({ width: 900, height: 620 });
 
   // Tell Electron where to load the entry point from
-  mainWindow.loadURL('http://localhost:5555');
-  //mainWindow.loadURL('file://' + __dirname + '/index.html');
+  mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // Clear out the main window when the app is closed
   mainWindow.on('closed', () => {
@@ -236,7 +235,7 @@ app.on('ready', () => {
         }]
     }, {
         label: '&View',
-        submenu: //(process.env.NODE_ENV === 'development') ? 
+        submenu: (process.env.NODE_ENV === 'development') ? 
         [{
           label: '&Reload',
           accelerator: 'Ctrl+R',
@@ -255,14 +254,13 @@ app.on('ready', () => {
             click:() => {
               mainWindow.toggleDevTools();
             }
-          }] 
-          // : [{
-          //   label: 'Toggle &Full Screen',
-          //   accelerator: 'F11',
-          //   click:() => {
-          //     mainWindow.setFullScreen(!mainWindow.isFullScreen());
-          //   }
-          // }]
+          }] : [{
+            label: 'Toggle &Full Screen',
+            accelerator: 'F11',
+            click:() => {
+              mainWindow.setFullScreen(!mainWindow.isFullScreen());
+            }
+          }]
       },
       langMenu,
       helpMenu];

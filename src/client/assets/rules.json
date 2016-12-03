@@ -9,7 +9,7 @@
       "Violation", 
       "Fixed"
     ],
-    "emails": []
+    "emails": ["alice@mail.com", "bob@mail.com"]
   }, {
     "interval": {
       "startTime": "23:59:59.999",
@@ -18,7 +18,7 @@
     "reportTypes" : [
       "Violation"
     ],
-    "emails": []
+    "emails": ["peter@mail.com"]
   }],
   "endpoint": [{
     "property": "status",

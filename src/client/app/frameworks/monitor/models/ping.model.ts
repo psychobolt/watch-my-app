@@ -9,5 +9,6 @@ export const PingStatus = {
   DISCONNECTED: 0,
   FAILED: -1,
   UNSUPPORTED: -2,
-  STALE: 3
+  STALE: -3,
+  DOWN: -4
 };

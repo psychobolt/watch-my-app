@@ -15,6 +15,7 @@ import {
   PingFailedAction,
   PingRetryAction,
   PingEndpointAction,
+  ServiceDownAction,
   Disconnected
 } from '../actions/index';
 import { 
@@ -42,6 +43,8 @@ export class PingEffects {
           return new PingUnsupportedAction(payload);
         case PingStatus.DISCONNECTED:
           return new Disconnected(payload);
+        case PingStatus.DOWN:
+          return new ServiceDownAction(payload);
         case PingStatus.STALE:
           return new PingCompletedAction();
         default:
@@ -50,7 +53,7 @@ export class PingEffects {
     });
   
   @Effect() pingSuccessOrFailure$ : Observable<Action> = this.actions$
-    .ofType(PingActionTypes.PING_SUCCESS, PingActionTypes.PING_FAILED, PingActionTypes.DISCONNECTED)
+    .ofType(PingActionTypes.PING_SUCCESS, PingActionTypes.PING_FAILED, PingActionTypes.DISCONNECTED, PingActionTypes.SERVICE_DOWN_ACTION)
     .map((action: PingSuccessAction) => new PingRetryAction(action.payload.endpoint));
 
   @Effect() pingRetry$ : Observable<Action> = this.actions$

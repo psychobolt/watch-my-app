@@ -13,8 +13,9 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreLogMonitorModule, useLogMonitor } from '@ngrx/store-log-monitor';
 import { TranslateLoader } from 'ng2-translate';
 
-// app routes
+// app
 import { routes } from './app/components/app.routes';
+import { APP_COMPONENTS, AppComponent } from './app/components/index';
 
 // feature modules
 import { CoreModule } from './app/frameworks/core/core.module';
@@ -72,9 +73,6 @@ export function win() {
 export function cons() {
   return console;
 }
-
-// app components
-import { APP_COMPONENTS, AppComponent } from './app/components/index';
 
 @NgModule({
   imports: [

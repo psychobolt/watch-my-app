@@ -25,3 +25,25 @@ gulp.task('clean.once', (done: any) => {
     done();
   }
 });
+// Build prod.
+gulp.task('build.prod', (done: any) =>
+runSequence('clean.prod',
+            'tslint',
+            'build.assets.prod',
+            'build.fonts',    // Added task;
+            'build.html_css',
+            'copy.prod',
+            'build.js.prod',
+            'build.bundles',
+            'build.bundles.app',
+            'build.index.prod',
+            done));
+// Build test.
+gulp.task('build.test', (done: any) =>
+runSequence('clean.dev',
+            'tslint',
+            'build.assets.dev',
+            'build.fonts',    // Added task;
+            'build.js.test',
+            'build.index.dev',
+            done));

@@ -1,3 +1,7 @@
+// app
+import { NON_LOCAL_URL_REGEX } from '../../../components/app.url.regex';
+
+// module
 import { 
   initialState, 
   IMonitorState,
@@ -20,6 +24,10 @@ export function reducer(
     case PingActionTypes.DISCONNECTED:
       return Object.assign({}, state, {
         pingServiceStatus: 'DISCONNECTED'
+      });
+    case PingActionTypes.SERVICE_DOWN_ACTION:
+      return Object.assign({}, state, {
+        pingServiceStatus: 'DOWN'
       });
     case PingActionTypes.PING_UNSUPPORTED:
     case PingActionTypes.PING_SUCCESS:
@@ -44,7 +52,7 @@ export function reducer(
             ping: action.payload.ping
           });
           storedEndpoint = endpointReportReducer(state, action, storedEndpoint, newEndpoint);
-          if (storedEndpoint.value.indexOf('localhost') === -1) { //TODO proxy should return if endpoint is localhost
+          if (storedEndpoint.value.match(NON_LOCAL_URL_REGEX)) {
             pingServiceStatus = 'ACTIVE';
           }
         }

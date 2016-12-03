@@ -20,6 +20,7 @@ export const PingActionTypes =  {
   PING_FAILED: type(`[${CATEGORY}] Ping Failed`),
   PING_UNSUPPORTED: type(`[${CATEGORY}] Ping Unsupported`),
   PING_RETRY: type(`[${CATEGORY}] Ping Retry`),
+  SERVICE_DOWN_ACTION: type(`[${CATEGORY}] Ping Service Offline`),
   DISCONNECTED: type(`[${CATEGORY}] Disconnected`)
 };
 
@@ -66,6 +67,11 @@ export class Disconnected implements Action {
   constructor(public payload: PingResultModel) { }
 }
 
+export class ServiceDownAction implements Action {
+  type = PingActionTypes.SERVICE_DOWN_ACTION;
+  constructor(public payload: PingResultModel) { }
+}
+
 /**
  * Export a type alias of all actions in this action group
  * so that reducers can easily compose action types
@@ -77,4 +83,5 @@ export type PingActions
   | PingFailedAction
   | PingUnsupportedAction
   | PingRetryAction
+  | ServiceDownAction
   | Disconnected;

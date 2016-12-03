@@ -7,7 +7,9 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 // app
+import { NON_LOCAL_URL_REGEX } from '../../../components/app.url.regex';
 import { IAppState } from '../../../frameworks/ngrx/state/app.state';
+import { Config } from '../../../frameworks/core/index';
 
 // module
 import { EndpointModel, EndpointType } from '../models/endpoint.model';
@@ -38,24 +40,36 @@ export class PingService {
   }
 
   private head(endpoint: EndpointModel, startTime: number): Observable<number> {
-    return this.http.head('proxy?' + new Date().getTime() + '&url=' + endpoint.value)
+    return this.http.head(this.getUrl(endpoint.value))
       .map((res) => this.getPing(startTime))
       .catch((err) => Observable.of(this.handleError(err, this.getPing(startTime))));
   }
 
   private get(endpoint: EndpointModel, startTime: number): Observable<number> {
-    return this.http.get('proxy?' + new Date().getTime() + '&url=' + endpoint.value)
+    return this.http.get(this.getUrl(endpoint.value))
       .map((res) => this.getPing(startTime))
       .catch((err) => Observable.of(this.handleError(err, this.getPing(startTime))));
   }
 
+  private getUrl(endpoint: string): string {
+    let time = new Date().getTime();
+    return Config.IS_WEB() ? 
+      `proxy?${time}&url=${endpoint}`:
+      endpoint + (endpoint.indexOf('?') ? '&' : '?') + time;
+  }
+
   private handleError(err: Response, ping: number): number {
-    if (err.status === 599) {
-      return PingStatus.DISCONNECTED;
-    } else if (err.status === 503) {
-      return PingStatus.FAILED;
+    if (Config.IS_WEB()) {
+      if (err.status === 599) {
+        return PingStatus.DISCONNECTED;
+      } else if (err.status === 503) {
+        return PingStatus.FAILED;
+      } else if (err.status === 0) {
+        return PingStatus.DOWN
+      }
+      return ping;
     }
-    return ping;
+    return PingStatus.FAILED;
   }
 
   private getPing(startTime: number) {

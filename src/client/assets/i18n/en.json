@@ -12,6 +12,7 @@
   "HIGH_LATENCY": "High Latency",
   "ACTIVE": "Active",
   "DISCONNECTED": "Network Disconnected",
+  "DOWN": "Proxy Offline",
   "STATUS": "Status",
   "ENDPOINT": "Endpoint",
   "REQUEST_TYPE": "Request Type",
