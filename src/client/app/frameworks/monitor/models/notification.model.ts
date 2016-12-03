@@ -6,7 +6,7 @@ export interface NotificationModel {
 
 export interface Interval {
   startTime?: number | string
-  duration: Duration
+  duration: string | Duration
 }
 
 export interface Duration {

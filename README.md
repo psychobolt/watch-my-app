@@ -2,11 +2,13 @@
 
 Watch My App is a framework for desktop and mobile for gathering network latency of web services and alerting on any violations.
 
+![alt text](https://github.com/psychobolt/watch-my-app/raw/master/dashboard.png "Endpoint Dashboard")
+
 ## Development
 
 This is a extended project of [Angular 2 Seed Advanced](https://github.com/NathanWalker/angular2-seed-advanced) framework.
 Please see the Angular 2 Seed Advanced project for information on running developement and production modes as well as development guides.
-The main implementation of the endpoint polling mechanism utilizes mainly Angular 2's services and the @ngrx/effect framework. Most of the sources are under the 'monitor' frameworks directory. e.g. src/app/frameworks/monitor.
+The main implementation of the endpoint polling mechanism utilizes mainly Angular 2's services and the @ngrx/effect framework. Most of the sources are under the 'monitor' frameworks directory. e.g. src/client/app/frameworks/monitor.
 
 ## Requirements
 
@@ -66,17 +68,63 @@ analytics.page();
 ## Rules Configuration
 
 The following show some rules that can be configured in order to generate reports. More rules will be added soon.
-Please see <b>src/client/assets/rules.json</b> for example.
+Please see <b>src/client/assets/rules.json</b> for example. Rules can be applied to any data property. 
+Currently the only data property that can be applied is __endpoint__.
 
-### Rule Types
+### Properties
 
-- ChangeRule
-- LimitRule
+#### Notifications
 
-### Report Types
+Describes reports that should be notified or tracked. Notifications poll constantly for reports to send.
 
-- Violations
-- Fixed
+- inverval 
+  - __startTime__ (optional): Type <number | string> If you require a offset time when 
+  - __duration__: Type <string | Duration>. How often to perform report checking. Can be a string e.g. HH:MM:ss.mmm.
+- __emails__: Type <Array<String |> |> Emails that should receive the generated reports
+- __reportTypes__: Type <Array<String |> |>
+
+#### Duration Types
+
+Supported number properties:
+
+- __seconds__ Type <number |>
+- __minutes__ Type <number |>
+- __hours__ Type <number |>
+- __days__ Type <number |>
+- __weeks__ Type <number |>
+- __months__ Type <number |>
+- __years__ Type <number |>
+
+#### Report Types
+
+- __Violations__
+- __Fixed__
+
+#### Rule Types
+
+All rules require a property
+
+- __ChangeRule__
+- __LimitRule__
+
+### Rules
+
+All rules required rules
+
+- __type__: Type <string |> See Rule Types.
+- __property__: Type <string |> The property name that the rule should be applied to.
+- __reportType__: Type <string |> See Report Type.
+
+#### Change Rule
+
+Assert that value changes
+
+- __oldValue__ Type <string | number>
+- __newValue__ Type <string | number>
+
+#### Limit Rule
+
+Coming soon.
 
 ## SMTP Configuration
 
