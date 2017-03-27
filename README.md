@@ -20,7 +20,7 @@ Clone repository and run npm install. Please see App Configuration section befor
 
 ### Local Service
 
-After successfully running ```npm install```, run ```npm run serve.prod```. Verify by going pointing your browser to [http://localhost:5555/]()
+After successfully running ```npm install```, run ```npm run serve.prod```. Verify by going pointing your browser to [http://localhost:5555/](http://localhost:5555/)
 
 ### Desktop
 
@@ -36,7 +36,7 @@ Below are required steps in order for the application to run successfully.
 
 ### Firebase
 
-- Create a new project in [Firebase](firebase.google.com) e.g. 'watch-my-app'.
+- Create a new project in [Firebase](http://firebase.google.com) e.g. 'watch-my-app'.
 - Under Firebase's dashboard, go to Database and configure Rules as follows: 
 ```json
 "rules": {
@@ -50,7 +50,7 @@ Below are required steps in order for the application to run successfully.
 
 ### Segment (Optional)
 
-- Create a [Segment](www.segment.com) account.
+- Create a [Segment](http://www.segment.com) account.
 - Follow setup up instructions under the tutorial.
 - Copy the provided API key and replace in <b>src/client/app/index.html</b> script section, see below e.g.
 ```javascript
